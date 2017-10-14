@@ -1,23 +1,18 @@
-import React from 'react';
+import React, { Component } from 'react';
 import {
   Container, Header, Content,
   Text
 } from 'native-base';
 import { Col, Row, Grid } from 'react-native-easy-grid';
 
+import RootNav from './nav';
 
-export default class App extends React.Component {
+
+export default class App extends Component {
   render() {
     return (
       <Container>
-        <Header />
-          <Grid>
-            <Row />
-            <Row>
-                <Text>Open up App.js to start working on your app!</Text>
-            </Row>
-            <Row />
-          </Grid>
+        <RootNav />
       </Container>
     );
   }
