@@ -1,24 +1,78 @@
 /* @flow */
 
 import React, { Component } from 'react';
+import { Keyboard } from 'react-native';
 import {
-  View,
-  Text,
-  StyleSheet,
-} from 'react-native';
+  Container, Form, Item,
+  Label, Input,
+  Button, Text
+} from 'native-base';
+
 
 export default class LoginScreen extends Component {
+  static navigationOptions = {
+    title: 'Welcome to Big Button Lists',
+    headerBackTitle: 'Cancel'
+  }
+
+  constructor(props) {
+    super(props);
+    this.navigate = this.props.navigation.navigate;
+  }
+
+  state = {
+    username: '',
+    password: ''
+  }
+
+  login = () => {
+    this.navigate('Lists');
+  }
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text>I'm the LoginScreen component</Text>
-      </View>
+        <Container>
+          <Form>
+            <Item floatingLabel >
+              <Label>
+                Username
+              </Label>
+              <Input
+                autoCorrect={false}
+                returnKeyType="next"
+                value={this.state.username}
+                onChangeText={(username) => this.setState({ username })}
+                onSubmitEditing={() => this.passwordField._root.focus()}
+              />
+            </Item>
+            <Item floatingLabel >
+              <Label> Password </Label>
+              <Input
+                secureTextEntry
+                getRef={(input) => { this.passwordField = input; }}
+                value={this.state.password}
+                onChangeText={(password) => this.setState({ password })}
+                onSubmitEditing={() => {
+                  Keyboard.dismiss();
+                  this.login();
+                }}
+              />
+            </Item>
+            <Button
+              full
+              backgroundColor='blue'
+              onPress={this.login}
+            >
+              <Text>Login</Text>
+            </Button>
+            <Button
+              full
+              onPress={() => this.navigate('Create')}
+            >
+              <Text>Create Account</Text>
+            </Button>
+          </Form>
+        </Container>
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
