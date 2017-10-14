@@ -15,9 +15,9 @@ const ListModeNavigator = TabNavigator(
     EditLists: {
       screen: EditAllListsScreen
     },
-    // SortLists: {
-    //   screen: SortAllListsScreen
-    // },
+    SortLists: {
+      screen: SortAllListsScreen
+    },
   }
 );
 
@@ -26,12 +26,12 @@ const ItemModeNavigator = TabNavigator(
     Check: {
       screen: CheckListScreen
     },
-    // Edit: {
-    //   screen: EditListScreen
-    // },
-    // Sort: {
-    //   screen: SortListScreen
-    // }
+    Edit: {
+      screen: EditListScreen
+    },
+    Sort: {
+      screen: SortListScreen
+    }
   }
 );
 
