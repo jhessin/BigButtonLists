@@ -6,8 +6,8 @@ import {
   Keyboard
 } from 'react-native';
 import {
-  Container, Header, Content,
-  Form, Item, Label, Input,
+  Content, Form, Item,
+  Label, Input,
   Button, Text
 } from 'native-base';
 
@@ -30,7 +30,7 @@ export default class CreateAccountScreen extends Component {
 
   render() {
     return (
-      <Container>
+      <Content>
         <Form>
           <Item floatingLabel>
             <Label>Username</Label>
@@ -83,7 +83,7 @@ export default class CreateAccountScreen extends Component {
         >
             <Text>Create Account</Text>
           </Button>
-      </Container>
+      </Content>
     );
   }
 }

@@ -1,26 +1,20 @@
 import React, { Component } from 'react';
+import { Provider } from 'react-redux';
 import {
   Container
 } from 'native-base';
 
+import { store } from './redux';
 import RootNav from './nav';
-
 
 export default class App extends Component {
   render() {
     return (
-      <Container>
-        <RootNav />
-      </Container>
+      <Provider store={store}>
+        <Container>
+          <RootNav />
+        </Container>
+      </Provider>
     );
   }
 }
-//
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });

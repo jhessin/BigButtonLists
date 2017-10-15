@@ -3,7 +3,7 @@
 import React, { Component } from 'react';
 import { Keyboard } from 'react-native';
 import {
-  Container, Content, Form,
+  Content, Form,
   Item, Label, Input,
   Button, Text
 } from 'native-base';
