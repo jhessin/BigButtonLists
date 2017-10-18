@@ -4,7 +4,7 @@ import {
   Container
 } from 'native-base';
 
-import { store } from './redux';
+import store from './redux';
 import RootNav from './nav';
 
 export default class App extends Component {
