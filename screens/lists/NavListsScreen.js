@@ -7,9 +7,18 @@ import { connect } from 'react-redux';
 import { actions } from '../../redux';
 
 class NavListsScreen extends Component {
+  static navigationOptions = {
+    title: 'Nav'
+  }
+
+  constructor(props) {
+    super(props);
+    this.navigate = this.props.navigation.navigate;
+  }
+
   onPress = index => () => {
     this.props.select(index);
-    // TODO: navigate to items screen
+    this.navigate('List');
   }
 
   renderRow = (item, section, index) => {
@@ -43,7 +52,7 @@ const stateToProps = state => {
 
 const dispatchToProps = dispatch => {
   return {
-    select: actions.SelectList
+    select: index => dispatch(actions.SelectList(index))
   };
 };
 
