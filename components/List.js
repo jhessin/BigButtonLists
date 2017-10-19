@@ -2,30 +2,34 @@
 
 import React, { Component } from 'react';
 import {
-  View,
-  Text,
   StyleSheet,
 } from 'react-native';
-import { List as NBList } from 'native-base';
+import { List as NBList, ListItem, Text } from 'native-base';
 import { connect } from 'react-redux';
 
-import Cell from './Cell';
-
 class List extends Component {
+  onPress = index => () => {
+    // TODO: call selectList action.
+    // TODO: navigate to items screen
+  }
+
   renderRow = (item, section, index) => {
     return (
-      <Cell index={index} />
+      <ListItem
+        onPress={this.onPress(index)}
+      >
+        <Text>{item.name}</Text>
+      </ListItem>
+      //<Cell data={item} index={index} />
     );
   }
+
   render() {
     return (
-      <View style={styles.container}>
-        <Text>I'm the List component</Text>
-        <NBList
-          dataArray={this.props.dataArray}
-          renderRow={this.renderRow}
-        />
-      </View>
+      <NBList
+        dataArray={this.props.dataArray}
+        renderRow={this.renderRow}
+      />
     );
   }
 }
