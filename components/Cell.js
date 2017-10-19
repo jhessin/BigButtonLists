@@ -6,16 +6,14 @@ import {
   Text,
   StyleSheet,
 } from 'react-native';
+import { ListItem } from 'native-base';
 
-import List from '../../components/List';
-
-export default class NavListsScreen extends Component {
+export default class Cell extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>I'm the NavListsScreen component</Text>
-        <List />
-      </View>
+      <ListItem>
+        <Text>I'm the {this.props.index} Cell component</Text>
+      </ListItem>
     );
   }
 }

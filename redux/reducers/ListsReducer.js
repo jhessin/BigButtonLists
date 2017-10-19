@@ -1,6 +1,13 @@
 import type from '../types';
 
-const initialState = [];
+const initialState = [
+  { name: 'list1' },
+  { name: 'list2' },
+  { name: 'list3' },
+  { name: 'list4' },
+  { name: 'list5' },
+  { name: 'list6' },
+];
 
 export default (state = initialState, action) => {
   const newState = [...state];
