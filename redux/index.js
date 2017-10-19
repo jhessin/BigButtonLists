@@ -4,6 +4,7 @@ import thunk from 'redux-thunk';
 import reducers from './reducers';
 
 export types from './types';
+export * as actions from './actions';
 
 const store = createStore(
   reducers,

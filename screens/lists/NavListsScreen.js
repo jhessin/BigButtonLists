@@ -1,27 +1,50 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-} from 'react-native';
+import { Content, List, ListItem, Text } from 'native-base';
+import { connect } from 'react-redux';
 
-import List from '../../components/List';
+import { actions } from '../../redux';
 
-export default class NavListsScreen extends Component {
-  render() {
+class NavListsScreen extends Component {
+  onPress = index => () => {
+    this.props.select(index);
+    // TODO: navigate to items screen
+  }
+
+  renderRow = (item, section, index) => {
     return (
-      <View style={styles.container}>
-        <Text>I'm the NavListsScreen component</Text>
-        <List />
-      </View>
+      <ListItem
+        onPress={this.onPress(index)}
+      >
+        <Text>{item.name}</Text>
+      </ListItem>
+    );
+  }
+
+  render() {
+    const { dataArray } = this.props;
+    return (
+      <Content>
+        <List
+          dataArray={dataArray}
+          renderRow={this.renderRow}
+        />
+      </Content>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
+const stateToProps = state => {
+  return {
+    dataArray: state.lists
+  };
+};
+
+const dispatchToProps = dispatch => {
+  return {
+    select: actions.SelectList
+  };
+};
+
+export default connect(stateToProps, dispatchToProps)(NavListsScreen);
