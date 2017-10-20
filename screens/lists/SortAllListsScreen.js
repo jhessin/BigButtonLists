@@ -51,8 +51,6 @@ class SortAllListsScreen extends Component {
       </Button>
     );
 
-    console.log(`index: ${index} index == 0: ${index == 0}`);
-
     return (
       <ListItem>
         <Text>

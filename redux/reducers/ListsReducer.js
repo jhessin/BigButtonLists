@@ -11,7 +11,6 @@ const initialState = [
 
 export default (state = initialState, action) => {
   const newState = [...state];
-  let temp = 0;
 
   switch (action.type) {
     case type.LIST_ADD:
@@ -27,17 +26,13 @@ export default (state = initialState, action) => {
       };
       return newState;
     case type.LIST_UP:
-
-      temp = newState[action.index - 1];
-      newState[action.index - 1] = newState[action.index];
-      newState[action.index] = temp;
+      newState[action.index - 1] = state[action.index];
+      newState[action.index] = state[action.index - 1];
 
       return newState;
     case type.LIST_DOWN:
-
-      temp = newState[action.index];
-      newState[action.index] = newState[action.index + 1];
-      newState[action.index + 1] = temp;
+      newState[action.index] = state[action.index + 1];
+      newState[action.index + 1] = state[action.index];
 
       return newState;
     default:
