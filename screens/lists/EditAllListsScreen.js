@@ -28,7 +28,7 @@ class EditAllListsScreen extends Component {
     return (
       <ListItem>
         <Input
-          value={item.name}
+          value={item && item.name}
           onChangeText={text => this.props.update(index, text)}
           onSubmitEditing={() => Keyboard.dismiss()}
         />

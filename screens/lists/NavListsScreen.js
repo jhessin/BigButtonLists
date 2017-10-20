@@ -26,7 +26,7 @@ class NavListsScreen extends Component {
       <ListItem
         onPress={this.onPress(index)}
       >
-        <Text>{item.name}</Text>
+        <Text>{item && item.name}</Text>
       </ListItem>
     );
   }
