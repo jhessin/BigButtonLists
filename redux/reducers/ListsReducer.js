@@ -1,4 +1,4 @@
-import type from '../types';
+import types from '../types';
 
 const initialState = [
   { name: 'list1' },
@@ -13,24 +13,24 @@ export default (state = initialState, action) => {
   const newState = [...state];
 
   switch (action.type) {
-    case type.LIST_ADD:
+    case types.LIST_ADD:
       return [...state, {
         name: action.name
       }];
-    case type.LIST_REMOVE:
+    case types.LIST_REMOVE:
       newState.splice(action.index, 1);
       return newState;
-    case type.LIST_MODIFY:
+    case types.LIST_MODIFY:
       newState[action.index] = {
         name: action.name
       };
       return newState;
-    case type.LIST_UP:
+    case types.LIST_UP:
       newState[action.index - 1] = state[action.index];
       newState[action.index] = state[action.index - 1];
 
       return newState;
-    case type.LIST_DOWN:
+    case types.LIST_DOWN:
       newState[action.index] = state[action.index + 1];
       newState[action.index + 1] = state[action.index];
 
