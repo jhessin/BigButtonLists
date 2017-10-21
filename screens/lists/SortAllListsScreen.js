@@ -77,9 +77,6 @@ class SortAllListsScreen extends Component {
           dataArray={dataArray}
           renderRow={this.renderRow}
         />
-        <Text>
-          {JSON.stringify(dataArray)}
-        </Text>
       </Content>
     );
   }
