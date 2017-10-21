@@ -9,32 +9,44 @@ const initialState = [
   { name: 'list6' },
 ];
 
+function swap(arr, x, y) {
+  const newArr = Array.from(arr);
+
+  newArr[x] = { name: arr[y].name };
+  newArr[y] = { name: arr[x].name };
+
+  return newArr;
+}
+
 export default (state = initialState, action) => {
   const newState = [...state];
 
+  // For some reason action.index is a String?
+  const index = Number(action.index);
+
   switch (action.type) {
+
     case types.LIST_ADD:
       return [...state, {
         name: action.name
       }];
+
     case types.LIST_REMOVE:
-      newState.splice(action.index, 1);
+      newState.splice(index, 1);
       return newState;
+
     case types.LIST_MODIFY:
-      newState[action.index] = {
+      newState[index] = {
         name: action.name
       };
       return newState;
+
     case types.LIST_UP:
-      newState[action.index - 1] = state[action.index];
-      newState[action.index] = state[action.index - 1];
+      return swap(state, index - 1, index);
 
-      return newState;
     case types.LIST_DOWN:
-      newState[action.index] = state[action.index + 1];
-      newState[action.index + 1] = state[action.index];
+      return swap(state, index, index + 1);
 
-      return newState;
     default:
       return state;
   }

@@ -29,6 +29,7 @@ class SortAllListsScreen extends Component {
       <Button
         transparent
         full
+        disabled={index == 0}
         onPress={() => this.props.up(index)}
       >
         <Icon
@@ -42,6 +43,7 @@ class SortAllListsScreen extends Component {
       <Button
         transparent
         full
+        disabled={index == this.props.dataLength - 1}
         onPress={() => this.props.down(index)}
       >
         <Icon
@@ -53,11 +55,11 @@ class SortAllListsScreen extends Component {
 
     return (
       <ListItem>
+        {upButton}
         <Text>
           {item ? item.name : index}
         </Text>
-        {index == 0 ? null : upButton}
-        {index == this.props.dataLength - 1 ? null : downButton}
+        {downButton}
       </ListItem>
     );
   }
