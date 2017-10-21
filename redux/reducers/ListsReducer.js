@@ -9,7 +9,7 @@ const initialState = [
   { name: 'list6' },
 ];
 
-function swap(arr, x, y) {
+export function swap(arr, x, y) {
   const newArr = Array.from(arr);
 
   newArr[x] = arr[y];

@@ -17,6 +17,10 @@ class NavListsScreen extends Component {
     this.navigate = this.props.navigation.navigate;
   }
 
+  componentWillMount() {
+    this.props.select(null);
+  }
+
   onPress = index => () => {
     this.props.select(index);
     this.navigate('List');
