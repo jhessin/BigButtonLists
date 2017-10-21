@@ -79,9 +79,9 @@ const stateToProps = state => {
 
 const dispatchToProps = dispatch => {
   return {
-    update: (index, name) => dispatch(actions.UpdateList(index, name)),
-    delete: index => dispatch(actions.RemoveList(index)),
-    add: name => dispatch(actions.AddList(name))
+    update: (index, name) => actions.UpdateList(dispatch, index, name),
+    delete: index => actions.RemoveList(dispatch, index),
+    add: name => actions.AddList(dispatch, name)
   };
 };
 

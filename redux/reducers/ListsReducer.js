@@ -1,13 +1,6 @@
 import types from '../types';
 
-const initialState = [
-  { name: 'list1' },
-  { name: 'list2' },
-  { name: 'list3' },
-  { name: 'list4' },
-  { name: 'list5' },
-  { name: 'list6' },
-];
+const initialState = [];
 
 export function swap(arr, x, y) {
   const newArr = Array.from(arr);
@@ -19,35 +12,61 @@ export function swap(arr, x, y) {
 }
 
 export default (state = initialState, action) => {
-  const newState = [...state];
-
-  // For some reason action.index is a String?
-  const index = Number(action.index);
+  const { dispatch } = action;
 
   switch (action.type) {
 
     case types.LIST_ADD:
-      return [...state, {
-        name: action.name
-      }];
+      return listAdd(state, action);
 
     case types.LIST_REMOVE:
-      newState.splice(index, 1);
-      return newState;
+      return listRemove(state, action);
 
     case types.LIST_MODIFY:
-      newState[index] = {
-        name: action.name
-      };
-      return newState;
+      return listModify(state, action);
 
     case types.LIST_UP:
-      return swap(state, index - 1, index);
+      return listUp(state, action);
 
     case types.LIST_DOWN:
-      return swap(state, index, index + 1);
+      return listDown(state, action);
 
     default:
       return state;
   }
 };
+
+function listAdd(state, action) {
+  const { name } = action;
+
+  return [...state, {
+    name
+  }];
+}
+
+function listRemove(state, action) {
+  const index = Number(action.index);
+  const newState = [...state];
+  newState.splice(index, 1);
+  return newState;
+}
+
+function listModify(state, action) {
+  const newState = [...state];
+  const index = Number(action.index);
+  const { name } = action;
+  newState[index] = {
+    name
+  };
+  return newState;
+}
+
+function listUp(state, action) {
+  const index = Number(action.index);
+  return swap(state, index - 1, index);
+}
+
+function listDown(state, action) {
+  const index = Number(action.index);
+  return swap(state, index, index + 1);
+}

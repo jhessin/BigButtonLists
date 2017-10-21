@@ -73,17 +73,22 @@ class EditListScreen extends Component {
 }
 
 const stateToProps = state => {
+  const { data, selection } = state;
+  if (selection === null || !data || !data[selection]) {
+    return {};
+  }
   return {
-    dataArray: state.items.data
+    dataArray: data[selection]
   };
 };
 
 const dispatchToProps = dispatch => {
+  const { UpdateItem, RemoveItem, AddItem } = actions;
   return {
     update: (index, name, checked) =>
-      dispatch(actions.UpdateItem(index, name, checked)),
-    delete: index => dispatch(actions.RemoveItem(index)),
-    add: name => dispatch(actions.AddItem(name))
+      UpdateItem(dispatch, index, name, checked),
+    delete: index => RemoveItem(dispatch, index),
+    add: name => AddItem(dispatch, name)
   };
 };
 

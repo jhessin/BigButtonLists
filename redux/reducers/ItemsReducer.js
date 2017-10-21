@@ -1,73 +1,136 @@
 import types from '../types';
 import { swap } from './ListsReducer';
 
-const items = [];
-
 const initialState = {
-  data: null,
+  data: [],
   selection: null
 };
 
-const defaultItem = {
-  name: '',
-  checked: false
-};
-
-function getList(index) {
-  if (index && items[index]) {
-    return items[index];
-  }
-
-  items[index] = [];
-  return items[index];
-}
-
 export default (state = initialState, action) => {
-  const newState = { ...state };
-  let index;
+  const { dispatch } = action;
 
   switch (action.type) {
     case types.LIST_SELECT:
-      index = Number(action.index);
-      if (state.selection) {
-        items[state.selection] = state.data;
-      }
-      newState.selection = index;
-      newState.data = getList(index);
-      return newState;
+      return listSelect(state, action);
+
+    case types.LIST_ADD:
+      return listAdd(state, action);
 
     case types.ITEM_ADD:
-      if (newState.data) {
-        newState.data = [...state.data, {
-          name: action.name,
-          checked: false
-        }];
-      }
-      return newState;
+      return itemAdd(state, action);
+
+    case types.LIST_REMOVE:
+      return listRemove(state, action);
 
     case types.ITEM_REMOVE:
-      index = Number(action.index);
-      newState.data.splice(index, 1);
-      return newState;
+      return itemRemove(state, action);
 
     case types.ITEM_MODIFY:
-      index = Number(action.index);
-      newState.data = [...state.data];
-      newState.data[index] = {
-        name: action.name,
-        checked: action.checked
-      };
-      return newState;
+      return itemModify(state, action);
+
+    case types.LIST_UP:
+      return listUp(state, action);
 
     case types.ITEM_UP:
-      index = Number(action.index);
-      return swap(state.data, index, index + 1);
+      return itemUp(state, action);
+
+    case types.LIST_DOWN:
+      return listDown(state, action);
 
     case types.ITEM_DOWN:
-      index = Number(action.index);
-      return swap(state.data, index, index + 1);
+      return itemDown(state, action);
 
     default:
       return state;
   }
 };
+
+function listSelect(state, action) {
+  const index = Number(action.index);
+  const newState = { ...state };
+  newState.selection = index;
+  return newState;
+}
+
+function listAdd(state, action) {
+  const newState = { ...state };
+  const index = Number(action.index);
+  newState.data[index] = [];
+  return newState;
+}
+
+function itemAdd(state, action) {
+  const { selection, data } = state;
+  const { name } = action;
+  const newState = { ...state };
+  newState.data[selection] = [...data, {
+    name,
+    checked: false
+  }];
+  return newState;
+}
+
+function listRemove(state, action) {
+  const index = Number(action.index);
+  const newState = { ...state };
+  newState.data.splice(index, 1);
+  return newState;
+}
+
+function itemRemove(state, action) {
+  if (state.selection === null) {
+    return state;
+  }
+
+  const index = Number(action.index);
+  const { selection } = state;
+  const newState = { ...state };
+  newState.data[selection].splice(index, 1);
+  return newState;
+}
+
+function itemModify(state, action) {
+  if (state.selection === null) {
+    return state;
+  }
+
+  const index = Number(action.index);
+  const { selection } = state;
+  const { name, checked } = action;
+  const newState = { ...state };
+  newState.data[selection][index] = {
+    name,
+    checked
+  };
+  return newState;
+}
+
+function listUp(state, action) {
+  const index = Number(action.index);
+  return swap(state.data, index - 1, index);
+}
+
+function itemUp(state, action) {
+  if (state.selection === null) {
+    return state;
+  }
+
+  const { selection } = state;
+  const index = Number(action.index);
+  return swap(state.data[selection], index - 1, index);
+}
+
+function listDown(state, action) {
+  const index = Number(action.index);
+  return swap(state.data, index, index + 1);
+}
+
+function itemDown(state, action) {
+  if (state.selection === null) {
+    return state;
+  }
+
+  const { selection } = state;
+  const index = Number(action.index);
+  return swap(state.data[selection], index, index + 1);
+}

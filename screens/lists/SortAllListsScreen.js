@@ -91,8 +91,8 @@ const stateToProps = state => {
 
 const dispatchToProps = dispatch => {
   return {
-    up: index => dispatch(actions.ListUp(index)),
-    down: index => dispatch(actions.ListDown(index))
+    up: index => actions.ListUp(dispatch, index),
+    down: index => actions.ListDown(dispatch, index)
   };
 };
 
