@@ -10,6 +10,7 @@ import {
   Button,
   Icon,
 } from 'native-base';
+import { Grid, Col } from 'react-native-easy-grid';
 import { connect } from 'react-redux';
 
 import { actions } from '../../redux';
@@ -55,11 +56,15 @@ class SortAllListsScreen extends Component {
 
     return (
       <ListItem>
-        {upButton}
-        <Text>
-          {item ? item.name : index}
-        </Text>
-        {downButton}
+        <Grid>
+          <Text>
+            {item ? item.name : index}
+          </Text>
+          <Col size={3} />
+          <Col size={1} />
+          {upButton}
+          {downButton}
+        </Grid>
       </ListItem>
     );
   }

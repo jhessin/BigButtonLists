@@ -1,8 +1,9 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { Content, List, ListItem, Text } from 'native-base';
+import { Content, List, ListItem, Text, Icon } from 'native-base';
 import { connect } from 'react-redux';
+import { Grid, Col } from 'react-native-easy-grid';
 
 import { actions } from '../../redux';
 
@@ -26,7 +27,14 @@ class NavListsScreen extends Component {
       <ListItem
         onPress={this.onPress(index)}
       >
-        <Text>{item && item.name}</Text>
+        <Grid>
+          <Text>{item && item.name}</Text>
+          <Col size={3} />
+          <Col size={1} />
+          <Icon
+            name="ios-arrow-dropright"
+          />
+        </Grid>
       </ListItem>
     );
   }
