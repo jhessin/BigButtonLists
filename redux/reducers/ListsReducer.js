@@ -12,8 +12,8 @@ const initialState = [
 function swap(arr, x, y) {
   const newArr = Array.from(arr);
 
-  newArr[x] = { name: arr[y].name };
-  newArr[y] = { name: arr[x].name };
+  newArr[x] = arr[y];
+  newArr[y] = arr[x];
 
   return newArr;
 }
