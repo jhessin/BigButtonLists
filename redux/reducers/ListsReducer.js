@@ -3,7 +3,7 @@ import types from '../types';
 const initialState = [];
 
 export function swap(arr, x, y) {
-  const newArr = Array.from(arr);
+  const newArr = [...arr];
 
   newArr[x] = arr[y];
   newArr[y] = arr[x];
