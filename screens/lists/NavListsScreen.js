@@ -64,7 +64,7 @@ const stateToProps = state => {
 
 const dispatchToProps = dispatch => {
   return {
-    select: index => actions.SelectList(dispatch, index)
+    select: index => dispatch(actions.SelectList(index))
   };
 };
 
