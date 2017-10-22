@@ -1,5 +1,6 @@
 {
   "rules": {
-    "eqeqeq": 0
+    "eqeqeq": 0,
+    "require-yield": 0
     }
 }
