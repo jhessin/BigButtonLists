@@ -1,9 +1,12 @@
 {
-  "rules": {
-    "eqeqeq": 0,
-    "require-yield": 0
-    },
+  "extends": [
+    "plugin:redux-saga/recommended"
+  ],
   "plugins": [
     "redux-saga"
-  ]
+  ],
+  "rules": {
+    "eqeqeq": 0,
+    # "require-yield": 0
+  },
 }
