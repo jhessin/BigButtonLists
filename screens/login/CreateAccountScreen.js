@@ -1,5 +1,5 @@
 /* @flow */
-
+import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import {
   View,
@@ -24,7 +24,11 @@ export default class CreateAccountScreen extends Component {
   }
 
   createAccount = () => {
-    // TODO: create account logic
+    const { recoveryEmail, password, confirmPass } = this.state;
+    firebase.auth().createUserWithEmailAndPassword(recoveryEmail, password)
+      .catch(error => {
+        console.error(error);
+      });
     this.props.navigation.goBack();
   }
 

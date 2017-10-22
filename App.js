@@ -1,4 +1,4 @@
-import firebase from 'firebase';
+import * as firebase from 'firebase';
 import React, { Component } from 'react';
 import { Provider } from 'react-redux';
 import {
@@ -14,7 +14,7 @@ export default class App extends Component {
     super(props);
     firebase.initializeApp(firebaseConfig);
   }
-  
+
   render() {
     return (
       <Provider store={store}>
