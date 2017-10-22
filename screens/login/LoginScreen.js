@@ -1,5 +1,5 @@
 /* @flow */
-import * as firebase from 'firebase';
+
 import React, { Component } from 'react';
 import { Keyboard } from 'react-native';
 import {
@@ -8,7 +8,6 @@ import {
   Button, Text
 } from 'native-base';
 
-require('firebase/firestore');
 
 export default class LoginScreen extends Component {
   static navigationOptions = {
@@ -19,23 +18,6 @@ export default class LoginScreen extends Component {
   constructor(props) {
     super(props);
     this.navigate = this.props.navigation.navigate;
-
-    firebase.auth().onAuthStateChanged(user => {
-      if (user) {
-        const db = firebase.firestore().collection('users').doc(user.uid);
-        db.get()
-          .then(doc => {
-            if (doc && doc.exists) {
-              this.data = doc.data();
-            } else {
-              db.set({
-                test: 'somedata'
-              });
-            }
-          });
-        this.navigate('Lists');
-      }
-    });
   }
 
   state = {
@@ -44,11 +26,7 @@ export default class LoginScreen extends Component {
   }
 
   login = () => {
-    const { username, password } = this.state;
-    firebase.auth().signInWithEmailAndPassword(username, password)
-      .catch(error => {
-        console.error(error);
-      });
+    this.navigate('Lists');
   }
 
   render() {
@@ -93,7 +71,6 @@ export default class LoginScreen extends Component {
         >
           <Text>Create Account</Text>
         </Button>
-        <Text>{JSON.stringify(this.data)}</Text>
       </Content>
     );
   }
