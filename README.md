@@ -2,7 +2,7 @@
 
 ## To run this project:
 
-1. clone it with `git clone ...`
+1. clone it with `git clone https://github.com/jhessin/BigButtonLists.git`
 
 2. run `npm install` or `yarn`
 
