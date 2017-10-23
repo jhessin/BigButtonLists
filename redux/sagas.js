@@ -10,6 +10,7 @@ require('firebase/firestore');
 
 const firebaseApp = firebase.initializeApp(fbConfig);
 const rsf = new ReduxSagaFirebase(firebaseApp, firebase.firestore());
+const auth = rsf.auth;
 const fs = rsf.firestore;
 
 export const rootSaga = function* () {
