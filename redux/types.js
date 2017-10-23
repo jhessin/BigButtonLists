@@ -1,4 +1,5 @@
 export default {
+/* Saga actions */
   LIST_ADD: 'addList',        // Add a list with action.name
   LIST_REMOVE: 'removeList',  // Remove a list with action.index
   LIST_MODIFY: 'modifyList',  // Raname the list at action.index to action.name
@@ -11,4 +12,5 @@ export default {
                               // action.name and action.checked
   ITEM_UP: 'moveItemUp',      // Move the item at action.index up one
   ITEM_DOWN: 'moveItemDown'   // Move the item at action.index down one
+/* store notifying actions */
 };
