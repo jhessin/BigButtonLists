@@ -1,27 +1,7 @@
-import firebase from 'firebase';
-import ReduxSagaFirebase from 'redux-saga-firebase';
-import { delay } from 'redux-saga';
 import { all, put, takeEvery } from 'redux-saga/effects';
 
-import { fbConfig } from '../keys';
-import types from './types';
-
-require('firebase/firestore');
-
-const firebaseApp = firebase.initializeApp(fbConfig);
-const rsf = new ReduxSagaFirebase(firebaseApp, firebase.firestore());
-const auth = rsf.auth;
-const fs = rsf.firestore;
-
-export const rootSaga = function* () {
-  try {
-    yield all([
-      watchLists()
-    ]);
-  } catch (e) {
-    console.error(e.message);
-  }
-};
+import types from '../types';
+import * as fb from './firebaseInit';
 
 export const listAdded = function* (action) {
   yield console.log(`List: ${action.name} added!`);
@@ -54,5 +34,3 @@ export const watchLists = function* () {
     console.error(e.message);
   }
 };
-
-// export default rootSaga;
