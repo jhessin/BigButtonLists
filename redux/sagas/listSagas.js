@@ -1,17 +1,29 @@
 import { all, put, takeEvery } from 'redux-saga/effects';
 
 import types from '../types';
-import * as fb from './firebaseInit';
+import { fs } from './firebaseInit';
 
-export const listAdded = function* (action) {
+export const watchLists = function* () {
+  try {
+    yield takeEvery(types.LIST_ADD, listAdd);
+    yield takeEvery(types.LIST_REMOVE, listRemove);
+    yield takeEvery(types.LIST_MODIFY, listModify);
+    yield takeEvery(types.LIST_UP, listUp);
+    yield takeEvery(types.LIST_DOWN, ListDown);
+  } catch (e) {
+    console.log(JSON.stringify(e));
+  }
+};
+
+export const listAdd = function* (action) {
   yield console.log(`List: ${action.name} added!`);
 };
 
-export const listRemoved = function* (action) {
+export const listRemove = function* (action) {
   yield console.log(`List at index: ${action.index} removed!`);
 };
 
-export const listModified = function* (action) {
+export const listModify = function* (action) {
   yield console.log(`List at index: ${action.index} renamed to: ${action.name}`);
 };
 
@@ -21,16 +33,4 @@ export const listUp = function* (action) {
 
 export const ListDown = function* (action) {
   yield console.log(`List at index: ${action.index} moved down`);
-};
-
-export const watchLists = function* () {
-  try {
-    yield takeEvery(types.LIST_ADD, listAdded);
-    yield takeEvery(types.LIST_REMOVE, listRemoved);
-    yield takeEvery(types.LIST_MODIFY, listModified);
-    yield takeEvery(types.LIST_UP, listUp);
-    yield takeEvery(types.LIST_DOWN, ListDown);
-  } catch (e) {
-    console.error(e.message);
-  }
 };

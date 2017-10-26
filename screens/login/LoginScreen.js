@@ -1,6 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Keyboard } from 'react-native';
 import {
   Content, Form,
@@ -8,8 +9,12 @@ import {
   Button, Text
 } from 'native-base';
 
+import { types } from '../../redux';
 
-export default class LoginScreen extends Component {
+export default connect(
+  state => state,
+  dispatch => { return { dispatch }; }
+)(class LoginScreen extends Component {
   static navigationOptions = {
     title: 'Welcome to Big Button Lists',
     headerBackTitle: 'Cancel'
@@ -17,7 +22,15 @@ export default class LoginScreen extends Component {
 
   constructor(props) {
     super(props);
-    this.navigate = this.props.navigation.navigate;
+    this.navigate = props.navigation.navigate;
+    this.dispatch = props.dispatch;
+
+    this.dispatch({
+      type: types.AUTH_LISTEN,
+      nav: this.navigate,
+      inScreen: 'Lists',
+      outScreen: 'Main'
+    });
   }
 
   state = {
@@ -26,7 +39,11 @@ export default class LoginScreen extends Component {
   }
 
   login = () => {
-    this.navigate('Lists');
+    this.dispatch({
+      type: types.AUTH_LOGIN,
+      uname: this.state.username,
+      pass: this.state.password
+    });
   }
 
   render() {
@@ -74,4 +91,4 @@ export default class LoginScreen extends Component {
       </Content>
     );
   }
-}
+});

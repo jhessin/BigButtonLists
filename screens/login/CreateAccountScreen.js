@@ -1,6 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import {
   View,
   Keyboard
@@ -11,9 +12,23 @@ import {
   Button, Text
 } from 'native-base';
 
-export default class CreateAccountScreen extends Component {
+import { types } from '../../redux';
+
+export default connect(
+  state => state,
+  dispatch => {
+    return { dispatch };
+  }
+)(class CreateAccountScreen extends Component {
   static navigationOptions = {
     title: 'Create Your Account'
+  }
+
+  constructor(props) {
+    super(props);
+
+    this.dispatch = props.dispatch;
+    this.navigate = props.navigation.navigate;
   }
 
   state = {
@@ -24,7 +39,11 @@ export default class CreateAccountScreen extends Component {
   }
 
   createAccount = () => {
-    // TODO: create account logic
+    this.dispatch({
+      type: types.AUTH_CREATE,
+      email: this.state.recoveryEmail,
+      pass: this.state.password
+    });
     this.props.navigation.goBack();
   }
 
@@ -86,4 +105,4 @@ export default class CreateAccountScreen extends Component {
       </Content>
     );
   }
-}
+});
