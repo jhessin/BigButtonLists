@@ -9,11 +9,18 @@ import {
   Button, Text
 } from 'native-base';
 
-import { types } from '../../redux';
+import { actions } from '../../redux';
 
 export default connect(
-  state => state,
-  dispatch => { return { dispatch }; }
+  null,
+  dispatch => {
+    return {
+      listen: (nav, inScreen, outScreen) =>
+        dispatch(actions.AuthListen(nav, inScreen, outScreen)),
+      login: (uname, pass) =>
+        dispatch(actions.AuthLogin(uname, pass))
+    };
+  }
 )(class LoginScreen extends Component {
   static navigationOptions = {
     title: 'Welcome to Big Button Lists',
@@ -23,14 +30,9 @@ export default connect(
   constructor(props) {
     super(props);
     this.navigate = props.navigation.navigate;
-    this.dispatch = props.dispatch;
+    this.listen = props.listen;
 
-    this.dispatch({
-      type: types.AUTH_LISTEN,
-      nav: this.navigate,
-      inScreen: 'Lists',
-      outScreen: 'Main'
-    });
+    this.listen(this.navigate, 'Lists', 'Main');
   }
 
   state = {
@@ -39,11 +41,7 @@ export default connect(
   }
 
   login = () => {
-    this.dispatch({
-      type: types.AUTH_LOGIN,
-      uname: this.state.username,
-      pass: this.state.password
-    });
+    this.props.login(this.state.username, this.state.password);
   }
 
   render() {

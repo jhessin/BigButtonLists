@@ -12,12 +12,15 @@ import {
   Button, Text
 } from 'native-base';
 
-import { types } from '../../redux';
+import { actions } from '../../redux';
 
 export default connect(
   state => state,
   dispatch => {
-    return { dispatch };
+    return {
+      create: (email, pass) =>
+        dispatch(actions.AuthCreate(email, pass))
+    };
   }
 )(class CreateAccountScreen extends Component {
   static navigationOptions = {
@@ -27,7 +30,7 @@ export default connect(
   constructor(props) {
     super(props);
 
-    this.dispatch = props.dispatch;
+    this.create = props.create;
     this.navigate = props.navigation.navigate;
   }
 
@@ -39,11 +42,7 @@ export default connect(
   }
 
   createAccount = () => {
-    this.dispatch({
-      type: types.AUTH_CREATE,
-      email: this.state.recoveryEmail,
-      pass: this.state.password
-    });
+    this.create(this.state.recoveryEmail, this.state.password);
     this.props.navigation.goBack();
   }
 

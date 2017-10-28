@@ -1,23 +1,37 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { Content, List, ListItem, Text, Icon } from 'native-base';
+import { Content, List, ListItem, Text, Icon, Button } from 'native-base';
 import { connect } from 'react-redux';
 import { Grid, Col } from 'react-native-easy-grid';
 
 import { actions } from '../../redux';
 
 class NavListsScreen extends Component {
-  static navigationOptions = {
-    title: 'Nav'
+  static navigationOptions = ({ navigation }) => {
+    const { params = {
+      logout: () => null
+    } } = navigation.state;
+    return {
+      headerLeft: (
+        <Button
+          small
+          onPress={params.logout}
+        >
+          <Text>Logout</Text>
+        </Button>
+      ),
+      title: 'Nav'
+    };
   }
 
   constructor(props) {
     super(props);
-    this.navigate = this.props.navigation.navigate;
+    this.navigate = props.navigation.navigate;
   }
 
   componentWillMount() {
+    this.props.navigation.setParams({ logout: this.props.logout });
     this.props.select(null);
   }
 
@@ -64,7 +78,8 @@ const stateToProps = state => {
 
 const dispatchToProps = dispatch => {
   return {
-    select: index => dispatch(actions.SelectList(index))
+    select: index => dispatch(actions.SelectList(index)),
+    logout: () => dispatch(actions.AuthLogout())
   };
 };
 
