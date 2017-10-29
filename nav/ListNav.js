@@ -23,15 +23,18 @@ const ListModeNavigator = TabNavigator(
 
 const ItemModeNavigator = TabNavigator(
   {
-    Check: {
-      screen: CheckListScreen
-    },
     Edit: {
       screen: EditListScreen
+    },
+    Check: {
+      screen: CheckListScreen
     },
     Sort: {
       screen: SortListScreen
     }
+  },
+  {
+    backBehavior: 'none',
   }
 );
 

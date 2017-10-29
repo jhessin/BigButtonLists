@@ -85,6 +85,7 @@ export default connect(
           <Item floatingLabel >
             <Label>Recovery Email</Label>
             <Input
+              autoCorrect={false}
               getRef={(input) => { this.emailField = input; }}
               value={this.state.recoveryEmail}
               onChangeText={(recoveryEmail) => this.setState({ recoveryEmail })}

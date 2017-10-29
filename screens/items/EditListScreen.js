@@ -22,16 +22,30 @@ class EditListScreen extends Component {
   constructor(props) {
     super(props);
     this.navigate = this.props.navigation.navigate;
+    this.state = {
+      newItemName: '',
+      currentItemName: '',
+    };
   }
 
   renderRow = (item, section, index) => {
     const { name, checked } = item;
+    const dismiss = () => {
+      if (this.state.currentItemName.length > 0) {
+        this.props.update(index, this.state.currentItemName, checked);
+        this.setState({ currentItemName: '' });
+      }
+      Keyboard.dismiss();
+    };
     return (
       <ListItem>
         <Input
-          value={name}
-          onChangeText={text => this.props.update(index, text, checked)}
-          onSubmitEditing={() => Keyboard.dismiss()}
+          defaultValue={name}
+          onChangeText={currentItemName =>
+            this.setState({ currentItemName })}
+          // This should reset the value to name
+          onSubmitEditing={dismiss}
+          onEndEditing={dismiss}
         />
         <Button
           transparent
@@ -58,15 +72,17 @@ class EditListScreen extends Component {
           dataArray={dataArray}
           renderRow={this.renderRow}
         />
-        <Button
-          full
-          transparent
-          onPress={() => this.props.add()}
-        >
-          <Icon
-            name="md-add-circle"
+        <ListItem>
+          <Input
+            getRef={(input) => { this.newItemField = input; }}
+            value={this.state.newItemName}
+            onChangeText={newItemName => this.setState({ newItemName })}
+            onSubmitEditing={() => {
+              this.props.add(this.state.newItemName);
+              this.setState({ newItemName: '' });
+            }}
           />
-        </Button>
+        </ListItem>
       </Content>
     );
   }

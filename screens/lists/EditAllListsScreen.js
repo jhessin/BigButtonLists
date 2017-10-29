@@ -22,15 +22,34 @@ class EditAllListsScreen extends Component {
   constructor(props) {
     super(props);
     this.navigate = this.props.navigation.navigate;
+    this.state = {
+      newListName: '',
+      currentListName: ''
+    };
   }
 
   renderRow = (item, section, index) => {
+    const dismiss = () => {
+      console.log(this.state.currentListName.length);
+      if (this.state.currentListName.length > 0) {
+        this.props.update(index, this.state.currentListName);
+        this.setState({ currentListName: '' });
+      }
+      Keyboard.dismiss();
+    };
+    const cancel = () => {
+      this.setState({ currentListName: '' });
+    };
+
     return (
       <ListItem>
         <Input
-          value={item && item.name}
-          onChangeText={text => this.props.update(index, text)}
-          onSubmitEditing={() => Keyboard.dismiss()}
+          autoCorrect={false}
+          defaultValue={item && item.name}
+          onChangeText={currentListName => this.setState({ currentListName })}
+          // This should reset the value to the item.name
+          onEndEditing={cancel}
+          onSubmitEditing={dismiss}
         />
         <Button
           transparent
@@ -51,21 +70,32 @@ class EditAllListsScreen extends Component {
 
   render() {
     const { dataArray } = this.props;
+    if (this.newListField) {
+      this.newListField._root.focus();
+    }
     return (
       <Content>
         <List
           dataArray={dataArray}
           renderRow={this.renderRow}
+          extraData={this.state}
         />
-        <Button
-          full
-          transparent
-          onPress={() => this.props.add()}
-        >
-          <Icon
-            name="md-add-circle"
+        <ListItem>
+          <Input
+            getRef={input => {
+              this.newListField = input;
+              input._root.focus();
+            }}
+            value={this.state.newListName}
+            onChangeText={newListName => this.setState({ newListName })}
+            onSubmitEditing={() => {
+              if (this.state.newListName.length > 0) {
+                this.props.add(this.state.newListName);
+                this.setState({ newListName: '' });
+              }
+            }}
           />
-        </Button>
+        </ListItem>
       </Content>
     );
   }

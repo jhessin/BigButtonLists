@@ -50,7 +50,7 @@ export default connect(
         <Form>
           <Item floatingLabel >
             <Label>
-              Username
+              Email
             </Label>
             <Input
               autoCorrect={false}
