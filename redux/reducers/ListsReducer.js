@@ -2,20 +2,19 @@ import types from '../types';
 
 const initialState = [];
 
-export function swap(arr, x, y) {
-  const newArr = [...arr];
-
-  newArr[x] = arr[y];
-  newArr[y] = arr[x];
-
-  return newArr;
+function snapToState(snap) {
+  const lists = [];
+  snap.forEach(doc => {
+    const data = doc && doc.data();
+    lists.push(data);
+  });
+  return lists;
 }
 
 export default (state = initialState, { type, data }) => {
   switch (type) {
     case types.SET_LISTS:
-      console.log(JSON.stringify(data));
-      return state;
+      return snapToState(data);
     default:
       return state;
   }

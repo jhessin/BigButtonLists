@@ -1,7 +1,8 @@
 import { take, takeEvery, put, call } from 'redux-saga/effects';
 
-import { auth } from './firebaseInit';
+import { auth, fs } from '../firebase';
 import types from '../types';
+import * as actions from '../actions';
 
 export const watchLogin = function* () {
   try {
@@ -10,7 +11,7 @@ export const watchLogin = function* () {
     yield takeEvery(types.AUTH_LOGIN, authLogin);
     yield takeEvery(types.AUTH_LOGOUT, authLogout);
   } catch (e) {
-    console.log(JSON.stringify(e));
+    console.log(e.message);
   }
 };
 
@@ -26,7 +27,7 @@ export const authListen = function* ({ nav, inScreen, outScreen }) {
       yield put({ type: types.SET_USER, user });
     }
   } catch (e) {
-    console.log(JSON.stringify(e));
+    console.log(e.message);
   }
 };
 
@@ -35,7 +36,7 @@ export const authCreate = function* ({ email, pass }) {
     const user = yield call(auth.createUserWithEmailAndPassword, email, pass);
     yield put({ type: types.SET_USER, user });
   } catch (e) {
-    console.log(JSON.stringify(e));
+    console.log(e.message);
   }
 };
 
@@ -44,7 +45,7 @@ export const authLogin = function* ({ uname, pass }) {
     yield auth.signOut();
     yield auth.signInWithEmailAndPassword(uname, pass);
   } catch (e) {
-    console.log(JSON.stringify(e));
+    console.log(e.message);
   }
 };
 
@@ -52,6 +53,6 @@ export const authLogout = function* () {
   try {
     yield auth.signOut();
   } catch (e) {
-    console.log(JSON.stringify(e));
+    console.log(e.message);
   }
 };

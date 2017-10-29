@@ -5,14 +5,16 @@ import { all, put, takeEvery } from 'redux-saga/effects';
 
 import { watchLogin } from './authSagas';
 import { watchLists } from './listSagas';
+import { watchItems } from './itemSagas';
 
 export const rootSaga = function* () {
   try {
     yield all([
       watchLogin(),
       watchLists(),
+      watchItems(),
     ]);
   } catch (e) {
-    console.log(JSON.stringify(e));
+    console.log(e.message);
   }
 };

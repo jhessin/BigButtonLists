@@ -74,7 +74,7 @@ class EditListScreen extends Component {
 
 const stateToProps = state => {
   return {
-    dataArray: state.items.data
+    dataArray: state.items
   };
 };
 

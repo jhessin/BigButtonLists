@@ -8,7 +8,7 @@ import { rootSaga } from './sagas';
 export types from './types';
 export * as actions from './actions';
 
-const sagaMiddleware = createSagaMiddleware();
+export const sagaMiddleware = createSagaMiddleware();
 const store = createStore(
   reducers,
   applyMiddleware(sagaMiddleware)
