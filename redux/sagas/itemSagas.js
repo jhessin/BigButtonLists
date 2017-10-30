@@ -30,12 +30,30 @@ export const setListener = function* ({ index }) {
     const { id } = list;
     if (uid && id && index !== null) {
       //collection('users').doc(uid).collection('lists')
-      state.doc = firestore.doc(`users/${uid}/lists/${id}`);
+      state.ref = firestore.collection(`users/${uid}/lists/${id}/items`);
+      state.get = () => state.ref.orderBy('index');
+      state.set = function* (data) {
+        /*eslint-disable no-shadow*/
+        const { index } = data;
+        const lists = yield select(getLists);
+        if (index !== undefined) {
+          const { id } = lists[index];
+          if (id) {
+            state.ref.doc(id).set(data);
+          } else {
+            state.ref.add(data);
+          }
+        } else {
+          /*eslint-disable no-param-reassign*/
+          data.index = lists.length;
+          state.ref.add(data);
+        }
+      };
       if (state.unsubscribe) {
         state.unsubscribe();
         delete state.unsubscribe;
       }
-      state.unsubscribe = state.doc
+      state.unsubscribe = state.ref
         .onSnapshot(snap => {
           store.dispatch(actions.SetItems(snap && snap.data()));
         });
@@ -58,13 +76,12 @@ export const setListener = function* ({ index }) {
 
 export const itemAdd = function* ({ name = '' }) {
   try {
-    const uid = yield select(getUID);
-    state.doc.get()
+    yield state.get()
       .then(doc => {
         const data = doc && doc.data();
         data.items = data.items || [];
         data.items.push({ name, checked: false });
-        state.doc.set(data);
+        state.set(data);
       });
   } catch (e) {
     console.log(e.message);
@@ -72,10 +89,14 @@ export const itemAdd = function* ({ name = '' }) {
 };
 
 function saveItems(list) {
-  state.doc.get().then(doc => {
-    const data = doc.exists ? doc.data() : {};
-    data.items = list;
-    state.doc.set(data);
+  state.get().then(snap => {
+    snap.forEach(doc => {
+      const data = doc.exists ? doc.data() : {};
+      const { id, index } = doc;
+      if (index) {
+        state.set(list[index]);
+      } // TODO:---------TODO TODO TODO
+    });
   });
 }
 

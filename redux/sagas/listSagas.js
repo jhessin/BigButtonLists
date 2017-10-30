@@ -21,15 +21,54 @@ export const watchLists = function* () {
   }
 };
 
+function load(snap) {
+  const lists = [];
+  snap.forEach(doc => {
+    const data = doc && doc.data();
+    data.id = doc.id;
+    lists.push(data);
+  });
+  return lists;
+}
+
+function save(index, name = '', id = 0, /*items = []*/) {
+  const data = { name, index };
+
+  if (id) {
+    state.ref.doc(id).set(data);
+    // items.forEach(item => {
+    //   const itemId = item.id;
+    //   if (itemId) {
+    //     state.ref.doc(`${id}/items/${itemId}`)
+    //       .set(item);
+    //   } else {
+    //     state.ref.collection(`${id}/items`)
+    //       .add(item);
+    //   }
+    // });
+  } else if (index) {
+    state.ref.add(data);
+  } else {
+    // TODO
+  }
+}
+
 export const setListener = function* ({ user }) {
   try {
-    let unsubscribe;
     if (user) {
       const { uid } = user;
       state.ref = firestore.collection(`users/${uid}/lists`);
-      yield unsubscribe = state.ref
+      if (state.unsubscribe) {
+        state.unsubscribe();
+        delete state.unsubscribe;
+      }
+      yield state.unsubscribe = state.ref
         .onSnapshot(snap => {
-          store.dispatch(actions.SetLists(snap));
+          store.dispatch(
+            actions.SetLists(
+              load(snap)
+            )
+          );
         });
       // yield call(
       //   fs.setDocument,
@@ -38,8 +77,9 @@ export const setListener = function* ({ user }) {
       //     username: user.displayName
       //   }
       // );
-    } else if (unsubscribe) {
-      unsubscribe();
+    } else if (state.unsubscribe) {
+      state.unsubscribe();
+      delete state.unsubscribe;
     }
   } catch (e) {
     console.log(e.message);
@@ -48,17 +88,7 @@ export const setListener = function* ({ user }) {
 
 export const listAdd = function* ({ name = '' }) {
   try {
-    const uid = yield select(getUID);
-    const data = {
-      name,
-      id: 0,
-      items: []
-    };
-    state.ref.add(data)
-      .then(doc => {
-        data.id = doc.id;
-        doc.set(data);
-      });
+    yield save(name);
   } catch (e) {
     console.log(e.message);
   }
@@ -82,17 +112,9 @@ export const listRemove = function* ({ index }) {
 export const listModify = function* ({ index, name }) {
   try {
     const lists = yield select(getLists);
-    const uid = yield select(getUID);
     const list = lists[index];
     const { id } = list;
-    state.ref.doc(id).get().then(doc => {
-      if (doc.exists) {
-        const data = doc.data();
-        data.id = id;
-        data.name = name;
-        state.ref.doc(id).set(data);
-      }
-    });
+    save(name, id);
     // yield call(
     //   fs.setDocument,
     //   `users/${uid}/lists/${id}`,
