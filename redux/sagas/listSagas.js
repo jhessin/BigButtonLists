@@ -50,6 +50,20 @@ export const setListener = function* ({ user }) {
         }
         return state.ref.orderBy('index').get();
       };
+      state.delete = ({ id, index }) => {
+        if (id) {
+          return state.ref.doc(id).delete();
+        }
+        if (index !== undefined) {
+          return state.ref.where('index', '==', index).get()
+            .then(snap => {
+              snap.forEach(doc => {
+                doc.ref.delete();
+              });
+            });
+        }
+        return state.ref.delete();
+      };
       state.set = data => {
         if (data.index === undefined) {
           /*eslint-disable no-param-reassign*/
@@ -93,7 +107,7 @@ export const listAdd = function* ({ name = '' }) {
 
 export const listRemove = function* ({ index }) {
   try {
-    yield state.get({ index }).delete();
+    yield state.delete({ index });
   } catch (e) {
     console.log(e.message);
   }

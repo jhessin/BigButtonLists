@@ -56,6 +56,20 @@ export const setListener = function* ({ index }) {
         }
         return state.ref.orderBy('index');
       };
+      state.delete = ({ id, index }) => {
+        if (id) {
+          return state.ref.doc(id).delete();
+        }
+        if (index !== undefined) {
+          return state.ref.where('index', '==', index).get()
+            .then(snap => {
+              snap.forEach(doc => {
+                doc.ref.delete();
+              });
+            });
+        }
+        return state.ref.delete();
+      };
       state.set = data => {
         const { index, id } = data;
         if (index === undefined) {
@@ -99,7 +113,7 @@ export const itemAdd = function* ({ name = '' }) {
 
 export const itemRemove = function* ({ index }) {
   try {
-    yield state.get({ index }).delete();
+    yield state.delete({ index });
   } catch (e) {
     console.log(e.message);
   }
