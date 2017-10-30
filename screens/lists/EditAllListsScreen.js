@@ -28,11 +28,12 @@ class EditAllListsScreen extends Component {
     };
   }
 
-  renderRow = (item, section, index) => {
+  renderRow = (item, section) => {
+    const { id, index, name } = item;
     const dismiss = () => {
       console.log(this.state.currentListName.length);
       if (this.state.currentListName.length > 0) {
-        this.props.update(index, this.state.currentListName);
+        this.props.update(id, index, this.state.currentListName);
         this.setState({ currentListName: '' });
       }
       Keyboard.dismiss();
@@ -45,7 +46,7 @@ class EditAllListsScreen extends Component {
       <ListItem>
         <Input
           autoCorrect={false}
-          defaultValue={item && item.name}
+          defaultValue={name}
           onChangeText={currentListName => this.setState({ currentListName })}
           // This should reset the value to the item.name
           onEndEditing={cancel}
@@ -82,6 +83,7 @@ class EditAllListsScreen extends Component {
         />
         <ListItem>
           <Input
+            autoCorrect={false}
             getRef={input => {
               this.newListField = input;
               input._root.focus();
@@ -109,7 +111,7 @@ const stateToProps = state => {
 
 const dispatchToProps = dispatch => {
   return {
-    update: (index, name) => dispatch(actions.UpdateList(index, name)),
+    update: (id, index, name) => dispatch(actions.UpdateList(id, index, name)),
     delete: index => dispatch(actions.RemoveList(index)),
     add: name => dispatch(actions.AddList(name))
   };

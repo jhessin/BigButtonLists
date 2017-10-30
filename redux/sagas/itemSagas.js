@@ -1,3 +1,4 @@
+/*eslint-disable no-shadow, no-param-reassign*/
 import { select, all, put, take, takeEvery, call } from 'redux-saga/effects';
 
 import types from '../types';
@@ -6,7 +7,23 @@ import { firestore } from '../firebase';
 import store from '../index';
 import { getUID, getLists, getItems } from './selectors';
 
-const state = {};
+const state = {
+  length: () => store.getState().items.length,
+  lists: () => store.getState().lists,
+  items: () => store.getState().items,
+  load: snap => {
+    const items = [];
+    snap.forEach(doc => {
+      const data = doc && doc.data();
+      data.id = doc.id;
+      data.index = items.length;
+      items.push(data);
+    });
+    return items;
+  },
+  get: () => console.error('_itemSagas.state.get() called before loaded.'),
+  set: () => console.error('_itemSagas.state.set() called before loaded.'),
+};
 
 export const watchItems = function* () {
   try {
@@ -25,27 +42,28 @@ export const setListener = function* ({ index }) {
   try {
     state.uid = yield select(getUID);
     const { uid } = state;
-    const lists = yield select(getLists);
+    const lists = state.lists();
     const list = lists[index];
     const { id } = list;
     if (uid && id && index !== null) {
-      //collection('users').doc(uid).collection('lists')
       state.ref = firestore.collection(`users/${uid}/lists/${id}/items`);
-      state.get = () => state.ref.orderBy('index');
-      state.set = function* (data) {
-        /*eslint-disable no-shadow*/
-        const { index } = data;
-        const lists = yield select(getLists);
+      state.get = ({ id, index }) => {
+        if (id) {
+          return state.ref.doc(id).get();
+        }
         if (index !== undefined) {
-          const { id } = lists[index];
-          if (id) {
-            state.ref.doc(id).set(data);
-          } else {
-            state.ref.add(data);
-          }
+          return state.ref.where('index', '==', index).get();
+        }
+        return state.ref.orderBy('index');
+      };
+      state.set = data => {
+        const { index, id } = data;
+        if (index === undefined) {
+          data.index = state.length();
+        }
+        if (id) {
+          state.ref.doc(data.id).set(data);
         } else {
-          /*eslint-disable no-param-reassign*/
-          data.index = lists.length;
           state.ref.add(data);
         }
       };
@@ -53,17 +71,14 @@ export const setListener = function* ({ index }) {
         state.unsubscribe();
         delete state.unsubscribe;
       }
-      state.unsubscribe = state.ref
+      state.unsubscribe = state.ref.orderBy('index')
         .onSnapshot(snap => {
-          store.dispatch(actions.SetItems(snap && snap.data()));
+          store.dispatch(
+            actions.SetItems(
+              state.load(snap)
+            )
+          );
         });
-      // yield call(
-      //   fs.setDocument,
-      //   `users/${uid}`,
-      //   {
-      //     username: user.displayName
-      //   }
-      // );
     } else if (state.unsubscribe) {
       state.unsubscribe();
       delete state.unsubscribe;
@@ -76,78 +91,40 @@ export const setListener = function* ({ index }) {
 
 export const itemAdd = function* ({ name = '' }) {
   try {
-    yield state.get()
-      .then(doc => {
-        const data = doc && doc.data();
-        data.items = data.items || [];
-        data.items.push({ name, checked: false });
-        state.set(data);
-      });
+    yield state.set({ name });
   } catch (e) {
     console.log(e.message);
   }
 };
-
-function saveItems(list) {
-  state.get().then(snap => {
-    snap.forEach(doc => {
-      const data = doc.exists ? doc.data() : {};
-      const { id, index } = doc;
-      if (index) {
-        state.set(list[index]);
-      } // TODO:---------TODO TODO TODO
-    });
-  });
-}
 
 export const itemRemove = function* ({ index }) {
   try {
-    const list = yield select(getItems);
-    list.splice(index, 1);
-    saveItems(list);
-    // yield call(
-    //   fs.deleteDocument,
-    //   `users/${uid}/lists/${id}`
-    // );
+    yield state.get({ index }).delete();
   } catch (e) {
     console.log(e.message);
   }
 };
 
-export const itemModify = function* ({ index, name, checked }) {
+export const itemModify = function* ({ id, index, name, checked }) {
   try {
-    const list = yield select(getItems);
-    list[index] = {
-      name,
-      checked
-    };
-    saveItems(list);
-    // yield call(
-    //   fs.setDocument,
-    //   `users/${uid}/lists/${id}`,
-    //   {
-    //     id,
-    //     name
-    //   }
-    // );
+    yield state.set({ id, index, name, checked });
   } catch (e) {
     console.log(e.message);
   }
 };
-
-function swap(list, index1, index2) {
-  const newList = [...list];
-
-  newList[index1] = list[index2];
-  newList[index2] = list[index1];
-
-  return newList;
-}
 
 export const itemUp = function* ({ index }) {
   try {
-    const list = yield select(getItems);
-    saveItems(swap(list, index, index - 1));
+    index = Number(index);
+    const items = yield select(getItems);
+    const src = items[index];
+    const dest = items[index + 1];
+
+    src.index = index + 1;
+    dest.index = index;
+
+    yield state.set(src);
+    yield state.set(dest);
   } catch (e) {
     console.log(e.message);
   }
@@ -155,8 +132,16 @@ export const itemUp = function* ({ index }) {
 
 export const itemDown = function* ({ index }) {
   try {
-    const list = yield select(getItems);
-    saveItems(swap(list, index, Number(index) + 1));
+    index = Number(index);
+    const items = yield select(getItems);
+    const src = items[index];
+    const dest = items[index - 1];
+
+    src.index = index - 1;
+    dest.index = index;
+
+    yield state.set(src);
+    yield state.set(dest);
   } catch (e) {
     console.log(e.message);
   }

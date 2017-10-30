@@ -9,11 +9,11 @@ import SortListScreen from '../screens/items/SortListScreen';
 
 const ListModeNavigator = TabNavigator(
   {
-    NavLists: {
-      screen: NavListsScreen
-    },
     EditLists: {
       screen: EditAllListsScreen
+    },
+    NavLists: {
+      screen: NavListsScreen
     },
     SortLists: {
       screen: SortAllListsScreen

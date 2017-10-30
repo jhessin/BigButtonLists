@@ -12,15 +12,15 @@ const state = {
   load: snap => {
     const lists = [];
     snap.forEach(doc => {
-      const data = doc && doc.data();
+      const data = doc.data();
       data.id = doc.id;
       data.index = lists.length;
       lists.push(data);
     });
     return lists;
   },
-  get: () => console.error('state.get() called before loaded.'),
-  set: () => console.error('state.set() called before loaded.'),
+  get: () => console.error('_listSagas.state.get() called before loaded.'),
+  set: () => console.error('_listSagas.state.set() called before loaded.'),
 };
 
 export const watchLists = function* () {
@@ -65,7 +65,7 @@ export const setListener = function* ({ user }) {
         state.unsubscribe();
         delete state.unsubscribe;
       }
-      yield state.unsubscribe = state.ref
+      yield state.unsubscribe = state.ref.orderBy('index')
         .onSnapshot(snap => {
           store.dispatch(
             actions.SetLists(
@@ -76,6 +76,7 @@ export const setListener = function* ({ user }) {
     } else if (state.unsubscribe) {
       state.unsubscribe();
       delete state.unsubscribe;
+      store.dispatch(actions.SetLists([]));
     }
   } catch (e) {
     console.log(e.message);
@@ -98,9 +99,9 @@ export const listRemove = function* ({ index }) {
   }
 };
 
-export const listModify = function* ({ index, name }) {
+export const listModify = function* ({ id, index, name }) {
   try {
-    yield state.set({ index, name });
+    yield state.set({ id, index, name });
   } catch (e) {
     console.log(e.message);
   }

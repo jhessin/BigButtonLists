@@ -28,11 +28,11 @@ class EditListScreen extends Component {
     };
   }
 
-  renderRow = (item, section, index) => {
-    const { name, checked } = item;
+  renderRow = (item, section) => {
+    const { id, index, name, checked } = item;
     const dismiss = () => {
       if (this.state.currentItemName.length > 0) {
-        this.props.update(index, this.state.currentItemName, checked);
+        this.props.update(id, index, this.state.currentItemName, checked);
         this.setState({ currentItemName: '' });
       }
       Keyboard.dismiss();
@@ -40,6 +40,7 @@ class EditListScreen extends Component {
     return (
       <ListItem>
         <Input
+          autoCorrect={false}
           defaultValue={name}
           onChangeText={currentItemName =>
             this.setState({ currentItemName })}
@@ -74,6 +75,7 @@ class EditListScreen extends Component {
         />
         <ListItem>
           <Input
+            autoCorrect={false}
             getRef={(input) => { this.newItemField = input; }}
             value={this.state.newItemName}
             onChangeText={newItemName => this.setState({ newItemName })}
@@ -96,8 +98,8 @@ const stateToProps = state => {
 
 const dispatchToProps = dispatch => {
   return {
-    update: (index, name, checked) =>
-      dispatch(actions.UpdateItem(index, name, checked)),
+    update: (id, index, name, checked) =>
+      dispatch(actions.UpdateItem(id, index, name, checked)),
     delete: index => dispatch(actions.RemoveItem(index)),
     add: name => dispatch(actions.AddItem(name))
   };
