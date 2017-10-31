@@ -103,9 +103,9 @@ export const setListener = function* ({ index }) {
   }
 };
 
-export const itemAdd = function* ({ name = '' }) {
+export const itemAdd = function* ({ name = '', checked = false }) {
   try {
-    yield state.set({ name });
+    yield state.set({ name, checked });
   } catch (e) {
     console.log(e.message);
   }

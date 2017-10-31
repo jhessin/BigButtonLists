@@ -37,16 +37,23 @@ class EditListScreen extends Component {
       }
       Keyboard.dismiss();
     };
+    let currentItemField;
+    const cancel = () => {
+      // This should reset the value to name
+      this.setState({ currentListName: '' }, () => {
+        currentItemField.setNativeProps({ text: name });
+      });
+    };
     return (
       <ListItem>
         <Input
+          getRef={input => { currentItemField = input._root; }}
           autoCorrect={false}
           defaultValue={name}
           onChangeText={currentItemName =>
             this.setState({ currentItemName })}
-          // This should reset the value to name
+          onEndEditing={cancel}
           onSubmitEditing={dismiss}
-          onEndEditing={dismiss}
         />
         <Button
           transparent
@@ -67,21 +74,27 @@ class EditListScreen extends Component {
 
   render() {
     const { dataArray } = this.props;
+    let newItemField;
     return (
       <Content>
         <List
           dataArray={dataArray}
           renderRow={this.renderRow}
+          extraData={this.state}
         />
         <ListItem>
           <Input
             autoCorrect={false}
-            getRef={(input) => { this.newItemField = input; }}
+            getRef={(input) => { newItemField = input._root; }}
             value={this.state.newItemName}
             onChangeText={newItemName => this.setState({ newItemName })}
             onSubmitEditing={() => {
-              this.props.add(this.state.newItemName);
-              this.setState({ newItemName: '' });
+              if (this.state.newItemName.length > 0) {
+                this.props.add(this.state.newItemName);
+                this.setState({ newListName: '' }, () => {
+                  newItemField.focus();
+                });
+              }
             }}
           />
         </ListItem>

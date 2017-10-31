@@ -68,7 +68,8 @@ export const SelectList = index => {
 export const AddItem = (name = '') => {
   return {
     type: types.ITEM_ADD,
-    name
+    name,
+    checked: false
   };
 };
 export const RemoveItem = index => {

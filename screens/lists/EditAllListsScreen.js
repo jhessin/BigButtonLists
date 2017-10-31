@@ -31,24 +31,28 @@ class EditAllListsScreen extends Component {
   renderRow = (item, section) => {
     const { id, index, name } = item;
     const dismiss = () => {
-      console.log(this.state.currentListName.length);
       if (this.state.currentListName.length > 0) {
         this.props.update(id, index, this.state.currentListName);
         this.setState({ currentListName: '' });
       }
       Keyboard.dismiss();
     };
+    let currentListField;
     const cancel = () => {
-      this.setState({ currentListName: '' });
+      // This should reset the value to the name
+      this.setState({ currentListName: '' }, () => {
+        currentListField.setNativeProps({ text: name });
+      });
     };
 
     return (
       <ListItem>
         <Input
+          getRef={input => { currentListField = input._root; }}
           autoCorrect={false}
           defaultValue={name}
-          onChangeText={currentListName => this.setState({ currentListName })}
-          // This should reset the value to the item.name
+          onChangeText={currentListName =>
+            this.setState({ currentListName })}
           onEndEditing={cancel}
           onSubmitEditing={dismiss}
         />
@@ -71,9 +75,7 @@ class EditAllListsScreen extends Component {
 
   render() {
     const { dataArray } = this.props;
-    if (this.newListField) {
-      this.newListField._root.focus();
-    }
+    let newListField;
     return (
       <Content>
         <List
@@ -84,16 +86,15 @@ class EditAllListsScreen extends Component {
         <ListItem>
           <Input
             autoCorrect={false}
-            getRef={input => {
-              this.newListField = input;
-              input._root.focus();
-            }}
+            getRef={input => { newListField = input._root; }}
             value={this.state.newListName}
             onChangeText={newListName => this.setState({ newListName })}
             onSubmitEditing={() => {
               if (this.state.newListName.length > 0) {
                 this.props.add(this.state.newListName);
-                this.setState({ newListName: '' });
+                this.setState({ newListName: '' }, () => {
+                  newListField.focus();
+                });
               }
             }}
           />
