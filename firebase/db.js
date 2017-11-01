@@ -67,12 +67,9 @@ const db = {
     }
   },
   up: ({ save, dataArray, index }) => {
-    console.log(`up: dataArray = ${JSON.stringify(dataArray)};
-    index = ${index}`);
     index = Number(index);
     const src = dataArray[index];
     const dest = dataArray[index - 1];
-    console.log(`up: src = ${JSON.stringify(dataArray[index])}`);
 
     src.index = index - 1;
     dest.index = index;

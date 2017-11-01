@@ -63,12 +63,5 @@ export default StackNavigator(
     List: {
       screen: ItemModeNavigator
     }
-  },
-  {
-    navigationOptions: ({ navigation }) => {
-      auth.listen({
-        nav: navigation.navigate
-      });
-    }
   }
 );
