@@ -47,7 +47,7 @@ const db = {
   },
   setFromRef: ({ ref, id, ...data }) => {
     if (id) {
-      ref.doc(id).set({ id, ...data });
+      ref.doc(id).update({ id, ...data });
     } else {
       ref.add(data);
     }
