@@ -73,7 +73,7 @@ class EditListScreen extends Component {
         <Input
           ref={input => {
             if (input) {
-              this.currentItemField = input._root;
+              this.itemFields[index] = input._root;
             }
           }}
           autoCorrect={false}
