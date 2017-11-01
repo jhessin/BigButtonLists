@@ -39,7 +39,7 @@ export const RemoveList = index => {
     index
   };
 };
-export const UpdateList = (id, index, name = '') => {
+export const UpdateList = ({ id = '', index = -1, name = '' }) => {
   return {
     type: types.LIST_MODIFY,
     id,
@@ -78,7 +78,7 @@ export const RemoveItem = index => {
     index
   };
 };
-export const UpdateItem = (id, index, name = '', checked = false) => {
+export const UpdateItem = ({ id = '', index = -1, name = '', checked = false }) => {
   return {
     type: types.ITEM_MODIFY,
     id,

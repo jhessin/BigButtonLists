@@ -31,9 +31,9 @@ class EditAllListsScreen extends Component {
     this.listFields = [];
   }
 
-  submit = (id, index) => () => {
+  submit = (list) => () => {
     if (this.state.currentListName.length > 0) {
-      this.props.update(id, index, this.state.currentListName);
+      this.props.update(list, this.state.currentListName);
       this.setState({ currentListName: '' });
     }
     Keyboard.dismiss();
@@ -65,8 +65,8 @@ class EditAllListsScreen extends Component {
     }
   }
 
-  renderRow = (item) => {
-    const { id, index, name } = item;
+  renderRow = (list) => {
+    const { id, index, name } = list;
 
     return (
       <ListItem>
@@ -81,7 +81,7 @@ class EditAllListsScreen extends Component {
           onChangeText={currentListName =>
             this.setState({ currentListName })}
           onEndEditing={this.cancel(index, name)}
-          onSubmitEditing={this.submit(id, index)}
+          onSubmitEditing={this.submit(list)}
         />
         <Button
           transparent
@@ -139,7 +139,7 @@ const stateToProps = state => {
 
 const dispatchToProps = dispatch => {
   return {
-    update: (id, index, name) => dispatch(actions.UpdateList(id, index, name)),
+    update: (list, name) => dispatch(actions.UpdateList({ ...list, name })),
     delete: index => dispatch(actions.RemoveList(index)),
     add: name => dispatch(actions.AddList(name))
   };

@@ -25,7 +25,8 @@ class SortAllListsScreen extends Component {
     this.navigate = this.props.navigation.navigate;
   }
 
-  renderRow = (item, section, index) => {
+  renderRow = (item) => {
+    const { index } = item;
     const upButton = (
       <Button
         transparent

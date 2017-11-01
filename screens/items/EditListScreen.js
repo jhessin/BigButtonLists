@@ -32,9 +32,9 @@ class EditListScreen extends Component {
     this.itemFields = [];
   }
 
-  submit = (id, index, checked) => () => {
+  submit = (item) => () => {
     if (this.state.currentItemName.length > 0) {
-      this.props.update(id, index, this.state.currentListName, checked);
+      this.props.update(item, this.state.currentListName);
       this.setState({ currentListName: '' });
     }
     Keyboard.dismiss();
@@ -81,7 +81,7 @@ class EditListScreen extends Component {
           onChangeText={currentItemName =>
             this.setState({ currentItemName })}
           onEndEditing={this.cancel(index, name)}
-          onSubmitEditing={this.submit(id, index, checked)}
+          onSubmitEditing={this.submit(item)}
         />
         <Button
           transparent
@@ -139,8 +139,8 @@ const stateToProps = state => {
 
 const dispatchToProps = dispatch => {
   return {
-    update: (id, index, name, checked) =>
-      dispatch(actions.UpdateItem(id, index, name, checked)),
+    update: (item, name) =>
+      dispatch(actions.UpdateItem({ ...item, name })),
     delete: index => dispatch(actions.RemoveItem(index)),
     add: name => dispatch(actions.AddItem(name))
   };

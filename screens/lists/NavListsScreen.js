@@ -18,7 +18,6 @@ class NavListsScreen extends Component {
   }
 
   componentWillMount() {
-    this.props.navigation.setParams({ logout: this.props.logout });
     this.props.select(null);
   }
 

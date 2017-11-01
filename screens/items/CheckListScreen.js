@@ -2,23 +2,63 @@
 
 import React, { Component } from 'react';
 import {
-  View,
+  Content,
+  List,
+  ListItem,
   Text,
-  StyleSheet,
-} from 'react-native';
+  Icon,
+  Button,
+} from 'native-base';
+import { connect } from 'react-redux';
 
-export default class CheckListScreen extends Component {
-  render() {
+import { actions } from '../../redux';
+
+class CheckListScreen extends Component {
+  static navigationOptions = {
+    title: 'Checklist'
+  }
+
+  renderRow = item => {
+    const { name, checked } = item;
+
     return (
-      <View style={styles.container}>
-        <Text>I'm the CheckListScreen component</Text>
-      </View>
+      <ListItem>
+        <Button
+          transparent
+          onPress={() => this.props.toggleChecked(item)}
+        >
+          <Icon name={checked ? 'md-checkbox-outline' : 'md-square-outline'} />
+        </Button>
+        <Text>{name}</Text>
+      </ListItem>
+    );
+  }
+
+  render() {
+    const { dataArray } = this.props;
+    return (
+      <Content>
+        <List
+          dataArray={dataArray}
+          renderRow={this.renderRow}
+        />
+      </Content>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+const stateToProps = state => ({
+  dataArray: state.items
 });
+
+const dispatchToProps = dispatch => ({
+  toggleChecked: item => {
+    const { checked } = item;
+    dispatch(actions.UpdateItem({
+      ...item,
+      checked: !checked
+    }));
+  }
+});
+
+export default connect(stateToProps, dispatchToProps)(CheckListScreen);

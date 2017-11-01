@@ -132,9 +132,9 @@ export const itemUp = function* ({ index }) {
     index = Number(index);
     const items = yield select(getItems);
     const src = items[index];
-    const dest = items[index + 1];
+    const dest = items[index - 1];
 
-    src.index = index + 1;
+    src.index = index - 1;
     dest.index = index;
 
     yield state.set(src);
@@ -149,9 +149,9 @@ export const itemDown = function* ({ index }) {
     index = Number(index);
     const items = yield select(getItems);
     const src = items[index];
-    const dest = items[index - 1];
+    const dest = items[index + 1];
 
-    src.index = index - 1;
+    src.index = index + 1;
     dest.index = index;
 
     yield state.set(src);
