@@ -5,7 +5,7 @@ import { Content, List, ListItem, Text, Icon, Button } from 'native-base';
 import { connect } from 'react-redux';
 import { Grid, Col } from 'react-native-easy-grid';
 
-import { actions } from '../../redux';
+import { db } from '../../firebase';
 
 class NavListsScreen extends Component {
   static navigationOptions = {
@@ -17,12 +17,8 @@ class NavListsScreen extends Component {
     this.navigate = props.navigation.navigate;
   }
 
-  componentWillMount() {
-    this.props.select(null);
-  }
-
   onPress = index => () => {
-    this.props.select(index);
+    db.select(index);
     this.navigate('List');
   }
 
@@ -62,11 +58,4 @@ const stateToProps = state => {
   };
 };
 
-const dispatchToProps = dispatch => {
-  return {
-    select: index => dispatch(actions.SelectList(index)),
-    logout: () => dispatch(actions.AuthLogout())
-  };
-};
-
-export default connect(stateToProps, dispatchToProps)(NavListsScreen);
+export default connect(stateToProps)(NavListsScreen);

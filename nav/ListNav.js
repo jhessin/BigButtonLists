@@ -1,7 +1,7 @@
 import { StackNavigator, TabNavigator } from 'react-navigation';
 import React from 'react';
 import { Button, Text } from 'native-base';
-import { auth } from '../redux/firebase';
+import { auth } from '../firebase';
 
 import store, { actions } from '../redux';
 
@@ -48,9 +48,6 @@ export default StackNavigator(
     All: {
       screen: ListModeNavigator,
       navigationOptions: ({ navigation }) => {
-        const { params = {
-          logout: () => null
-        } } = navigation.state;
         return {
           headerLeft: (
             <Button
@@ -69,13 +66,8 @@ export default StackNavigator(
   },
   {
     navigationOptions: ({ navigation }) => {
-      auth.onAuthStateChanged(user => {
-        if (user) {
-          store.dispatch(actions.SetUser(user));
-          navigation.navigate('Lists');
-        } else {
-          navigation.navigate('Main');
-        }
+      auth.listen({
+        nav: navigation.navigate
       });
     }
   }

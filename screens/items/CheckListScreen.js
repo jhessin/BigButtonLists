@@ -11,11 +11,19 @@ import {
 } from 'native-base';
 import { connect } from 'react-redux';
 
-import { actions } from '../../redux';
+import { db } from '../../firebase';
 
 class CheckListScreen extends Component {
   static navigationOptions = {
     title: 'Checklist'
+  }
+
+  toggleChecked = item => {
+    const { checked } = item;
+    db.setItem({
+      ...item,
+      checked: !checked
+    });
   }
 
   renderRow = item => {
@@ -25,7 +33,7 @@ class CheckListScreen extends Component {
       <ListItem>
         <Button
           transparent
-          onPress={() => this.props.toggleChecked(item)}
+          onPress={() => this.toggleChecked(item)}
         >
           <Icon
             name={checked ? 'md-checkbox-outline' : 'md-square-outline'}
@@ -53,14 +61,4 @@ const stateToProps = state => ({
   dataArray: state.items
 });
 
-const dispatchToProps = dispatch => ({
-  toggleChecked: item => {
-    const { checked } = item;
-    dispatch(actions.UpdateItem({
-      ...item,
-      checked: !checked
-    }));
-  }
-});
-
-export default connect(stateToProps, dispatchToProps)(CheckListScreen);
+export default connect(stateToProps)(CheckListScreen);

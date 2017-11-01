@@ -14,15 +14,11 @@ import { Grid, Col } from 'react-native-easy-grid';
 import { connect } from 'react-redux';
 
 import { actions } from '../../redux';
+import { db } from '../../firebase';
 
 class SortAllListsScreen extends Component {
   static navigationOptions = {
     title: 'Sort'
-  }
-
-  constructor(props) {
-    super(props);
-    this.navigate = this.props.navigation.navigate;
   }
 
   renderRow = (item) => {
@@ -32,7 +28,7 @@ class SortAllListsScreen extends Component {
         transparent
         full
         disabled={index == 0}
-        onPress={() => this.props.up(index)}
+        onPress={() => db.upList(index)}
       >
         <Icon
           active
@@ -46,7 +42,7 @@ class SortAllListsScreen extends Component {
         transparent
         full
         disabled={index == this.props.dataLength - 1}
-        onPress={() => this.props.down(index)}
+        onPress={() => db.downList(index)}
       >
         <Icon
           active
@@ -90,11 +86,4 @@ const stateToProps = state => {
   };
 };
 
-const dispatchToProps = dispatch => {
-  return {
-    up: index => dispatch(actions.ListUp(index)),
-    down: index => dispatch(actions.ListDown(index))
-  };
-};
-
-export default connect(stateToProps, dispatchToProps)(SortAllListsScreen);
+export default connect(stateToProps)(SortAllListsScreen);

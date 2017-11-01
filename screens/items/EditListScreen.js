@@ -14,7 +14,7 @@ import {
 } from 'native-base';
 import { connect } from 'react-redux';
 
-import { actions } from '../../redux';
+import { db } from '../../firebase';
 
 class EditListScreen extends Component {
   static navigationOptions = {
@@ -22,19 +22,19 @@ class EditListScreen extends Component {
     title: 'Edit'
   }
 
-  constructor(props) {
-    super(props);
-    this.navigate = this.props.navigation.navigate;
-    this.state = {
-      newItemName: '',
-      currentItemName: '',
-    };
-    this.itemFields = [];
-  }
+  state = {
+    newItemName: '',
+    currentItemName: '',
+  };
+
+  itemFields = [];
 
   submit = (item) => () => {
     if (this.state.currentItemName.length > 0) {
-      this.props.update(item, this.state.currentListName);
+      db.setItem({
+        ...item,
+        name: this.state.currentListName
+      });
       this.setState({ currentListName: '' });
     }
     Keyboard.dismiss();
@@ -53,7 +53,9 @@ class EditListScreen extends Component {
 
   refocus = () => {
     if (this.state.newItemName.length > 0) {
-      this.props.add(this.state.newItemName);
+      db.setItem({
+        name: this.state.newItemName
+      });
       this.setState({ newItemName: '' }, () => {
         try {
           this.newItemField.focus();
@@ -86,7 +88,7 @@ class EditListScreen extends Component {
         <Button
           transparent
           full
-          onPress={() => this.props.delete(index)}
+          onPress={() => db.deleteItem({ index })}
         >
           <Icon
             active
@@ -137,13 +139,4 @@ const stateToProps = state => {
   };
 };
 
-const dispatchToProps = dispatch => {
-  return {
-    update: (item, name) =>
-      dispatch(actions.UpdateItem({ ...item, name })),
-    delete: index => dispatch(actions.RemoveItem(index)),
-    add: name => dispatch(actions.AddItem(name))
-  };
-};
-
-export default connect(stateToProps, dispatchToProps)(EditListScreen);
+export default connect(stateToProps)(EditListScreen);

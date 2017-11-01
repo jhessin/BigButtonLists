@@ -1,7 +1,6 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Keyboard } from 'react-native';
 import {
   Content, Form,
@@ -9,30 +8,12 @@ import {
   Button, Text
 } from 'native-base';
 
-import { actions } from '../../redux';
+import { auth } from '../../firebase';
 
-export default connect(
-  null,
-  dispatch => {
-    return {
-      listen: (nav, inScreen, outScreen) =>
-        dispatch(actions.AuthListen(nav, inScreen, outScreen)),
-      login: (uname, pass) =>
-        dispatch(actions.AuthLogin(uname, pass))
-    };
-  }
-)(class LoginScreen extends Component {
+export default class LoginScreen extends Component {
   static navigationOptions = {
     title: 'Welcome to Big Button Lists',
     headerBackTitle: 'Cancel'
-  }
-
-  constructor(props) {
-    super(props);
-    this.navigate = props.navigation.navigate;
-    this.listen = props.listen;
-
-    this.listen(this.navigate, 'Lists', 'Main');
   }
 
   state = {
@@ -41,7 +22,7 @@ export default connect(
   }
 
   login = () => {
-    this.props.login(this.state.username, this.state.password);
+    auth.login({ email: this.state.username, pass: this.state.password });
   }
 
   render() {
@@ -82,11 +63,11 @@ export default connect(
         </Button>
         <Button
           full
-          onPress={() => this.navigate('Create')}
+          onPress={() => this.props.navigation.navigate('Create')}
         >
           <Text>Create Account</Text>
         </Button>
       </Content>
     );
   }
-});
+}

@@ -1,7 +1,6 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import {
   View,
   Keyboard
@@ -12,25 +11,15 @@ import {
   Button, Text
 } from 'native-base';
 
-import { actions } from '../../redux';
+import { auth } from '../../firebase';
 
-export default connect(
-  state => state,
-  dispatch => {
-    return {
-      create: (email, pass) =>
-        dispatch(actions.AuthCreate(email, pass))
-    };
-  }
-)(class CreateAccountScreen extends Component {
+export default class CreateAccountScreen extends Component {
   static navigationOptions = {
     title: 'Create Your Account'
   }
 
   constructor(props) {
     super(props);
-
-    this.create = props.create;
     this.navigate = props.navigation.navigate;
   }
 
@@ -42,8 +31,10 @@ export default connect(
   }
 
   createAccount = () => {
-    this.create(this.state.recoveryEmail, this.state.password);
-    this.props.navigation.goBack();
+    auth.create({
+      email: this.state.recoveryEmail,
+      pass: this.state.password
+    });
   }
 
   render() {
@@ -105,4 +96,4 @@ export default connect(
       </Content>
     );
   }
-});
+}

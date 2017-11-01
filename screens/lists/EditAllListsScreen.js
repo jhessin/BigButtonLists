@@ -14,26 +14,26 @@ import {
 } from 'native-base';
 import { connect } from 'react-redux';
 
-import { actions } from '../../redux';
+import { db } from '../../firebase';
 
 class EditAllListsScreen extends Component {
   static navigationOptions = {
     title: 'Edit'
   }
 
-  constructor(props) {
-    super(props);
-    this.navigate = this.props.navigation.navigate;
-    this.state = {
-      newListName: '',
-      currentListName: ''
-    };
-    this.listFields = [];
-  }
+  state = {
+    newListName: '',
+    currentListName: ''
+  };
+
+  listFields = [];
 
   submit = (list) => () => {
     if (this.state.currentListName.length > 0) {
-      this.props.update(list, this.state.currentListName);
+      db.setList({
+        ...list,
+        name: this.state.currentListName
+      });
       this.setState({ currentListName: '' });
     }
     Keyboard.dismiss();
@@ -53,7 +53,9 @@ class EditAllListsScreen extends Component {
 
   refocus = () => {
     if (this.state.newListName.length > 0) {
-      this.props.add(this.state.newListName);
+      db.setList({
+        name: this.state.newListName
+      });
       this.setState({ newListName: '' }, () => {
         try {
           this.newListField.focus();
@@ -86,7 +88,7 @@ class EditAllListsScreen extends Component {
         <Button
           transparent
           full
-          onPress={() => this.props.delete(index)}
+          onPress={() => db.deleteList({ index })}
         >
           <Icon
             active
@@ -137,12 +139,4 @@ const stateToProps = state => {
   };
 };
 
-const dispatchToProps = dispatch => {
-  return {
-    update: (list, name) => dispatch(actions.UpdateList({ ...list, name })),
-    delete: index => dispatch(actions.RemoveList(index)),
-    add: name => dispatch(actions.AddList(name))
-  };
-};
-
-export default connect(stateToProps, dispatchToProps)(EditAllListsScreen);
+export default connect(stateToProps)(EditAllListsScreen);
