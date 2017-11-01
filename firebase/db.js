@@ -96,7 +96,7 @@ const db = {
       const { uid } = user;
 
       // save the listsRef for later.
-      db.listsRef = firestore.collection(`user/${uid}/lists`);
+      db.listsRef = firestore.collection(`users/${uid}/lists`);
 
       // Unsubscribe from previous listeners
       if (db.listUnsubscribe) {
@@ -155,13 +155,12 @@ const db = {
   select: (index) => {
     // Get and Check required variables
     try {
-      const { uid } = db;
       const { id } = db.lists()[index];
-      if (uid && id && db.listsLength > index) {
+      if (id && db.listsLength > index) {
         db.selectedList = { id, index };
         // save itemsRef for later.
-        db.itemsRef = firestore.collection(
-          `users/${uid}/lists/${id}/items`);
+        db.itemsRef = db.listsRef.collection(
+          `${id}/items`);
 
         // Unsubscribe from previous listeners
         if (db.itemUnsubscribe) {
