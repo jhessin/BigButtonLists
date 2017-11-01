@@ -27,7 +27,9 @@ class CheckListScreen extends Component {
           transparent
           onPress={() => this.props.toggleChecked(item)}
         >
-          <Icon name={checked ? 'md-checkbox-outline' : 'md-square-outline'} />
+          <Icon
+            name={checked ? 'md-checkbox-outline' : 'md-square-outline'}
+          />
         </Button>
         <Text>{name}</Text>
       </ListItem>

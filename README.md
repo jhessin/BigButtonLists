@@ -1,6 +1,12 @@
 # BigButtonLists
 
-## To run this project:
+## To run the latest release on your phone
+
+1. Download Expo from the Play Store or App Store.
+
+2. Visit https://expo.io/@jhessin/bigbuttonlists and click `Open in Expo`.
+
+## To compile and run this project:
 
 1. clone it with `git clone https://github.com/jhessin/BigButtonLists.git`
 
