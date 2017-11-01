@@ -161,7 +161,6 @@ const db = {
         const { id } = lists[index];
         db.selectedList = { id, index };
         if (uid && id) {
-          console.log(`selecting list with id ${id}`);
           // save itemsRef for later.
           db.itemsRef = firestore.collection(
             `users/${uid}/lists/${id}/items`);
