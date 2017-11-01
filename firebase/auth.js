@@ -8,34 +8,25 @@ export function listen({ nav, inScreen = 'Lists', outScreen = 'Main' }) {
   auth.onAuthStateChanged(user => {
     if (user) {
       store.dispatch(actions.SetUser(user));
-      db.listen();
       nav(inScreen);
     } else {
       nav(outScreen);
     }
+    db.listen(user);
   });
 }
 
 export function create({ email, pass }) {
-  try {
-    auth.createUserWithEmailAndPassword(email, pass);
-  } catch (e) {
-    console.log(e.message);
-  }
+  auth.createUserWithEmailAndPassword(email, pass)
+    .catch(e => console.log(e.message));
 }
 
 export function login({ email, pass }) {
-  try {
-    auth.signInWithEmailAndPassword(email, pass);
-  } catch (e) {
-    console.log(e.message);
-  }
+  auth.signInWithEmailAndPassword(email, pass)
+    .catch(e => console.log(e.message));
 }
 
 export function signOut() {
-  try {
-    auth.signOut();
-  } catch (e) {
-    console.log(e.message);
-  }
+  auth.signOut()
+    .catch(e => console.log(e.message));
 }

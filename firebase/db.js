@@ -9,7 +9,6 @@ const db = {
   items: () => store.getState().items,
   listsLength: () => db.lists().length,
   itemsLength: () => db.items().length,
-  user: () => store.getState().user,
 
   // Generic helpers
   docToData: doc => {
@@ -90,10 +89,10 @@ const db = {
   },
 
   // Useable wrapper methods for lists
-  listen: () => {
+  listen: (user) => {
     // Get and Check required variables
-    const user = db.user();
     if (user) {
+      db.uid = user.uid;
       const { uid } = user;
 
       // save the listsRef for later.
@@ -115,7 +114,9 @@ const db = {
           );
         });
     } else if (db.listUnsubscribe) {
+      delete db.uid;
       db.listUnsubscribe();
+      db.select();
       store.dispatch(
         actions.SetLists([])
       );
@@ -153,41 +154,40 @@ const db = {
   // Useable wrapper methods for items
   select: (index) => {
     // Get and Check required variables
-    const user = db.user();
-    if (user) {
-      const { uid } = user;
-      const lists = db.lists();
-      if (lists && index !== null && db.listsLength() > index) {
-        const { id } = lists[index];
+    try {
+      const { uid } = db;
+      const { id } = db.lists()[index];
+      if (uid && id && db.listsLength > index) {
         db.selectedList = { id, index };
-        if (uid && id) {
-          // save itemsRef for later.
-          db.itemsRef = firestore.collection(
-            `users/${uid}/lists/${id}/items`);
+        // save itemsRef for later.
+        db.itemsRef = firestore.collection(
+          `users/${uid}/lists/${id}/items`);
 
-          // Unsubscribe from previous listeners
-          if (db.itemUnsubscribe) {
-            db.itemUnsubscribe();
-            delete db.itemUnsubscribe;
-          }
-
-          // listen to the items on the server and post them to redux
-          db.itemUnsubscribe = db.itemsRef.orderBy('index')
-            .onSnapshot(snap => {
-              store.dispatch(
-                actions.SetItems(
-                  db.snapToArray(snap)
-                )
-              );
-            });
-        } else if (db.itemUnsubscribe) {
+        // Unsubscribe from previous listeners
+        if (db.itemUnsubscribe) {
           db.itemUnsubscribe();
-          store.dispatch(
-            actions.SetItems([])
-          );
-          delete db.listUnsubscribe;
+          delete db.itemUnsubscribe;
         }
+
+        // listen to the items on the server and post them to redux
+        db.itemUnsubscribe = db.itemsRef.orderBy('index')
+          .onSnapshot(snap => {
+            store.dispatch(
+              actions.SetItems(
+                db.snapToArray(snap)
+              )
+            );
+          }
+        );
       }
+    } catch (e) {
+        if (db.itemUnsubscribe) {
+          db.itemUnsubscribe();
+          delete db.listUnsubscribe;
+      }
+      store.dispatch(
+        actions.SetItems([])
+      );
     }
   },
   getItem: async({ id, index }) =>

@@ -1,8 +1,8 @@
 {
   "name": "bigbuttonlists",
-  "version": "0.0.0",
+  "version": "0.00.01",
   "description": "Hello Expo!",
-  "author": null,
+  "author": "Jim Hessin",
   "private": true,
   "main": "node_modules/expo/AppEntry.js",
   "dependencies": {
