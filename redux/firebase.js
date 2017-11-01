@@ -8,5 +8,5 @@ require('firebase/firestore');
 export const firebase = firebaseGen.initializeApp(fbConfig);
 export const firestore = firebase.firestore();
 export const rsf = new ReduxSagaFirebase(firebase, firestore);
-export const auth = rsf.auth;
+export const auth = firebase.auth();
 export { fs } from './firestore';

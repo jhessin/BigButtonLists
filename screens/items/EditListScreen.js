@@ -6,6 +6,8 @@ import {
   Content,
   List,
   ListItem,
+  Item,
+  Label,
   Input,
   Button,
   Icon,
@@ -16,6 +18,7 @@ import { actions } from '../../redux';
 
 class EditListScreen extends Component {
   static navigationOptions = {
+    // TODO: show the ListName here!
     title: 'Edit'
   }
 
@@ -26,34 +29,59 @@ class EditListScreen extends Component {
       newItemName: '',
       currentItemName: '',
     };
+    this.itemFields = [];
   }
 
-  renderRow = (item, section) => {
-    const { id, index, name, checked } = item;
-    const dismiss = () => {
-      if (this.state.currentItemName.length > 0) {
-        this.props.update(id, index, this.state.currentItemName, checked);
-        this.setState({ currentItemName: '' });
+  submit = (id, index, checked) => () => {
+    if (this.state.currentItemName.length > 0) {
+      this.props.update(id, index, this.state.currentListName, checked);
+      this.setState({ currentListName: '' });
+    }
+    Keyboard.dismiss();
+  }
+
+  cancel = (index, name) => () => {
+    this.setState({ currentItemName: '' }, () => {
+      try {
+        this.itemFields[index].setNativeProps({ text: name });
+      } catch (e) {
+        console.log(e.message,
+          `index = ${index}; itemFields[index] = ${this.itemFields[index]}`);
       }
-      Keyboard.dismiss();
-    };
-    let currentItemField;
-    const cancel = () => {
-      // This should reset the value to name
-      this.setState({ currentListName: '' }, () => {
-        currentItemField.setNativeProps({ text: name });
+    });
+  }
+
+  refocus = () => {
+    if (this.state.newItemName.length > 0) {
+      this.props.add(this.state.newItemName);
+      this.setState({ newItemName: '' }, () => {
+        try {
+          this.newItemField.focus();
+        } catch (e) {
+          console.log(e.message,
+            `this.newItemField = ${this.newItemField}`);
+        }
       });
-    };
+    }
+  }
+
+  renderRow = (item) => {
+    const { id, index, name, checked } = item;
+
     return (
       <ListItem>
         <Input
-          getRef={input => { currentItemField = input._root; }}
+          ref={input => {
+            if (input) {
+              this.currentItemField = input._root;
+            }
+          }}
           autoCorrect={false}
           defaultValue={name}
           onChangeText={currentItemName =>
             this.setState({ currentItemName })}
-          onEndEditing={cancel}
-          onSubmitEditing={dismiss}
+          onEndEditing={this.cancel(index, name)}
+          onSubmitEditing={this.submit(id, index, checked)}
         />
         <Button
           transparent
@@ -74,29 +102,29 @@ class EditListScreen extends Component {
 
   render() {
     const { dataArray } = this.props;
-    let newItemField;
     return (
       <Content>
         <List
           dataArray={dataArray}
           renderRow={this.renderRow}
-          extraData={this.state}
         />
         <ListItem>
-          <Input
-            autoCorrect={false}
-            getRef={(input) => { newItemField = input._root; }}
-            value={this.state.newItemName}
-            onChangeText={newItemName => this.setState({ newItemName })}
-            onSubmitEditing={() => {
-              if (this.state.newItemName.length > 0) {
-                this.props.add(this.state.newItemName);
-                this.setState({ newListName: '' }, () => {
-                  newItemField.focus();
-                });
-              }
-            }}
-          />
+          <Item floatingLabel>
+            <Label>
+              New Item
+            </Label>
+            <Input
+              getRef={input => {
+                if (input) {
+                  this.newItemField = input._root;
+                }
+              }}
+              autoCorrect={false}
+              value={this.state.newItemName}
+              onChangeText={newItemName => this.setState({ newItemName })}
+              onSubmitEditing={this.refocus}
+            />
+          </Item>
         </ListItem>
       </Content>
     );

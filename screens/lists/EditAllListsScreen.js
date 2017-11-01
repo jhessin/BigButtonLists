@@ -6,6 +6,8 @@ import {
   Content,
   List,
   ListItem,
+  Item,
+  Label,
   Input,
   Button,
   Icon,
@@ -26,35 +28,60 @@ class EditAllListsScreen extends Component {
       newListName: '',
       currentListName: ''
     };
+    this.listFields = [];
   }
 
-  renderRow = (item, section) => {
-    const { id, index, name } = item;
-    const dismiss = () => {
-      if (this.state.currentListName.length > 0) {
-        this.props.update(id, index, this.state.currentListName);
-        this.setState({ currentListName: '' });
+  submit = (id, index) => () => {
+    if (this.state.currentListName.length > 0) {
+      this.props.update(id, index, this.state.currentListName);
+      this.setState({ currentListName: '' });
+    }
+    Keyboard.dismiss();
+  }
+
+  cancel = (index, name) => () => {
+    // This should reset the value to the name
+    this.setState({ currentListName: '' }, () => {
+      try {
+        this.listFields[index].setNativeProps({ text: name });
+      } catch (e) {
+        console.log(e.message,
+          `index = ${index}; listFields[index] = ${this.listFields[index]}`);
       }
-      Keyboard.dismiss();
-    };
-    let currentListField;
-    const cancel = () => {
-      // This should reset the value to the name
-      this.setState({ currentListName: '' }, () => {
-        currentListField.setNativeProps({ text: name });
+    });
+  }
+
+  refocus = () => {
+    if (this.state.newListName.length > 0) {
+      this.props.add(this.state.newListName);
+      this.setState({ newListName: '' }, () => {
+        try {
+          this.newListField.focus();
+        } catch (e) {
+          console.log(e.message,
+            `this.newListField = ${this.newListField}`);
+        }
       });
-    };
+    }
+  }
+
+  renderRow = (item) => {
+    const { id, index, name } = item;
 
     return (
       <ListItem>
         <Input
-          getRef={input => { currentListField = input._root; }}
+          ref={input => {
+            if (input) {
+              this.listFields[index] = input._root;
+            }
+          }}
           autoCorrect={false}
           defaultValue={name}
           onChangeText={currentListName =>
             this.setState({ currentListName })}
-          onEndEditing={cancel}
-          onSubmitEditing={dismiss}
+          onEndEditing={this.cancel(index, name)}
+          onSubmitEditing={this.submit(id, index)}
         />
         <Button
           transparent
@@ -75,29 +102,29 @@ class EditAllListsScreen extends Component {
 
   render() {
     const { dataArray } = this.props;
-    let newListField;
     return (
       <Content>
         <List
           dataArray={dataArray}
           renderRow={this.renderRow}
-          extraData={this.state}
         />
         <ListItem>
-          <Input
-            autoCorrect={false}
-            getRef={input => { newListField = input._root; }}
-            value={this.state.newListName}
-            onChangeText={newListName => this.setState({ newListName })}
-            onSubmitEditing={() => {
-              if (this.state.newListName.length > 0) {
-                this.props.add(this.state.newListName);
-                this.setState({ newListName: '' }, () => {
-                  newListField.focus();
-                });
-              }
-            }}
-          />
+          <Item floatingLabel >
+            <Label>
+              New List
+            </Label>
+            <Input
+              getRef={input => {
+                if (input) {
+                  this.newListField = input._root;
+                }
+              }}
+              autoCorrect={false}
+              value={this.state.newListName}
+              onChangeText={newListName => this.setState({ newListName })}
+              onSubmitEditing={this.refocus}
+            />
+          </Item>
         </ListItem>
       </Content>
     );

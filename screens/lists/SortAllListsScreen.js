@@ -17,7 +17,7 @@ import { actions } from '../../redux';
 
 class SortAllListsScreen extends Component {
   static navigationOptions = {
-    title: 'Edit'
+    title: 'Sort'
   }
 
   constructor(props) {

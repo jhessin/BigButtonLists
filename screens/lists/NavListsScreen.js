@@ -8,21 +8,8 @@ import { Grid, Col } from 'react-native-easy-grid';
 import { actions } from '../../redux';
 
 class NavListsScreen extends Component {
-  static navigationOptions = ({ navigation }) => {
-    const { params = {
-      logout: () => null
-    } } = navigation.state;
-    return {
-      headerLeft: (
-        <Button
-          small
-          onPress={params.logout}
-        >
-          <Text>Logout</Text>
-        </Button>
-      ),
+  static navigationOptions = {
       title: 'Nav'
-    };
   }
 
   constructor(props) {
