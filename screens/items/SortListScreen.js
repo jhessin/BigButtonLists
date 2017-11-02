@@ -10,7 +10,6 @@ import {
   Button,
   Icon,
 } from 'native-base';
-import { Grid, Col } from 'react-native-easy-grid';
 import { connect } from 'react-redux';
 
 import { db } from '../../firebase';
@@ -38,7 +37,10 @@ class SortListScreen extends Component {
         disabled={index === 0}
         onPress={() => db.upItem(index)}
       >
-        <Icon active name="md-arrow-round-up" />
+        <Icon
+          style={styles.text}
+          active name="md-arrow-round-up"
+        />
       </Button>
     );
 
@@ -49,19 +51,18 @@ class SortListScreen extends Component {
         disabled={index === this.props.dataLength - 1}
         onPress={() => db.downItem(index)}
       >
-        <Icon active name="md-arrow-round-down" />
+        <Icon
+          style={styles.text}
+          active name="md-arrow-round-down"
+        />
       </Button>
     );
 
     return (
       <ListItem>
-        <Grid>
-          <Text style={styles.text}>{name}</Text>
-          <Col size={3} />
-          <Col size={1} />
-          {upButton}
-          {downButton}
-        </Grid>
+        {upButton}
+        {downButton}
+        <Text style={styles.text}>{name}</Text>
       </ListItem>
     );
   }

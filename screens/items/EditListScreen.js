@@ -42,9 +42,9 @@ class EditListScreen extends Component {
     if (this.state.currentItemName.length > 0) {
       db.setItem({
         ...item,
-        name: this.state.currentListName
+        name: this.state.currentItemName
       });
-      this.setState({ currentListName: '' });
+      this.setState({ currentItemName: '' });
     }
     Keyboard.dismiss();
   }
@@ -101,11 +101,10 @@ class EditListScreen extends Component {
           onPress={() => db.deleteItem({ index })}
         >
           <Icon
-            active
             name="trash"
             ios="ios-trash"
             android="delete-forever"
-            style={{ color: 'maroon' }}
+            style={[styles.text, { color: 'maroon' }]}
           />
         </Button>
       </ListItem>

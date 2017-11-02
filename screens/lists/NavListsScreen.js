@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import { Image } from 'react-native';
 import { Content, List, ListItem, Text, Icon, Button } from 'native-base';
 import { connect } from 'react-redux';
-import { Grid, Col } from 'react-native-easy-grid';
 
 import { db } from '../../firebase';
 import styles from '../styles';
@@ -37,14 +36,11 @@ class NavListsScreen extends Component {
       <ListItem
         onPress={this.onPress(index)}
       >
-        <Grid>
-          <Text style={styles.text}>{item && item.name}</Text>
-          <Col size={3} />
-          <Col size={1} />
-          <Icon
-            name="ios-arrow-dropright"
-          />
-        </Grid>
+        <Text style={styles.text}>{item && item.name}</Text>
+        <Icon
+          style={styles.text}
+          name="ios-arrow-dropright"
+        />
       </ListItem>
     );
   }

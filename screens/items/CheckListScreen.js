@@ -46,6 +46,7 @@ class CheckListScreen extends Component {
           onPress={() => this.toggleChecked(item)}
         >
           <Icon
+            style={styles.text}
             name={checked ? 'md-checkbox-outline' : 'md-square-outline'}
           />
         </Button>
