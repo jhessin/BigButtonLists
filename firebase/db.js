@@ -159,8 +159,8 @@ const db = {
       if (id && db.listsLength > index) {
         db.selectedList = { id, index };
         // save itemsRef for later.
-        db.itemsRef = db.listsRef.collection(
-          `${id}/items`);
+        db.itemsRef = db.listsRef.doc(id).collection(
+          'items');
 
         // Unsubscribe from previous listeners
         if (db.itemUnsubscribe) {
