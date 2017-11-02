@@ -1,11 +1,11 @@
 {
   "expo": {
     "name": "bigbuttonlists",
-    "description": "An empty new project",
+    "description": "A simple checklist app",
     "slug": "bigbuttonlists",
     "privacy": "public",
     "sdkVersion": "21.0.0",
-    "version": "1.0.0",
+    "version": "0.0.2",
     "orientation": "portrait",
     "primaryColor": "#cccccc",
     "icon": "./assets/icons/check.png",

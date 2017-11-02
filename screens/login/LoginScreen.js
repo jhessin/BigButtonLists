@@ -35,6 +35,7 @@ export default class LoginScreen extends Component {
             </Label>
             <Input
               autoCorrect={false}
+              keyboardType="email-address"
               returnKeyType="next"
               value={this.state.username}
               onChangeText={(username) => this.setState({ username })}
