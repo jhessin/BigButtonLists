@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { Keyboard } from 'react-native';
+import { Keyboard, Image, StyleSheet } from 'react-native';
 import {
   Content,
   List,
@@ -16,9 +16,24 @@ import { connect } from 'react-redux';
 
 import { db } from '../../firebase';
 
+const tabIcon = require('../../assets/icons/edit.png');
+
+const styles = StyleSheet.create({
+  icon: {
+    width: 26,
+    height: 26
+  }
+});
+
 class EditAllListsScreen extends Component {
   static navigationOptions = {
-    title: 'Edit'
+    title: 'Edit',
+    tabBarIcon: ({ tintColor }) => (
+      <Image
+        source={tabIcon}
+        style={[styles.icon, { tintColor }]}
+      />
+    )
   }
 
   state = {

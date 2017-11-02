@@ -1,7 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
-import { Keyboard } from 'react-native';
+import { Keyboard, Image } from 'react-native';
 import {
   Content,
   List,
@@ -14,10 +14,19 @@ import { Grid, Col } from 'react-native-easy-grid';
 import { connect } from 'react-redux';
 
 import { db } from '../../firebase';
+import styles from '../styles';
+
+const tabIcon = require('../../assets/icons/sort.png');
 
 class SortListScreen extends Component {
   static navigationOptions = {
-    title: 'Sort'
+    title: 'Sort',
+    tabBarIcon: ({ tintColor }) => (
+      <Image
+        source={tabIcon}
+        style={[styles.icon, { tintColor }]}
+      />
+    )
   }
 
   renderRow = (item) => {
@@ -26,7 +35,7 @@ class SortListScreen extends Component {
       <Button
         transparent
         full
-        disabled={index == 0}
+        disabled={index === 0}
         onPress={() => db.upItem(index)}
       >
         <Icon active name="md-arrow-round-up" />
@@ -37,7 +46,7 @@ class SortListScreen extends Component {
       <Button
         transparent
         full
-        disabled={index == this.props.dataLength - 1}
+        disabled={index === this.props.dataLength - 1}
         onPress={() => db.downItem(index)}
       >
         <Icon active name="md-arrow-round-down" />

@@ -1,6 +1,7 @@
 /* @flow */
 
 import React, { Component } from 'react';
+import { Image } from 'react-native';
 import {
   Content,
   List,
@@ -12,10 +13,19 @@ import {
 import { connect } from 'react-redux';
 
 import { db } from '../../firebase';
+import styles from '../styles';
+
+const tabIcon = require('../../assets/icons/check.png');
 
 class CheckListScreen extends Component {
   static navigationOptions = {
-    title: 'Checklist'
+    title: 'Checklist',
+    tabBarIcon: ({ tintColor }) => (
+      <Image
+        source={tabIcon}
+        style={[styles.icon, { tintColor }]}
+      />
+    )
   }
 
   toggleChecked = item => {

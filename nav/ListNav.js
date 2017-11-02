@@ -1,4 +1,4 @@
-import { StackNavigator, TabNavigator } from 'react-navigation';
+import { StackNavigator, TabNavigator, TabBarBottom } from 'react-navigation';
 import React from 'react';
 import { Button, Text } from 'native-base';
 import { auth } from '../firebase';
@@ -12,6 +12,13 @@ import EditListScreen from '../screens/items/EditListScreen';
 import CheckListScreen from '../screens/items/CheckListScreen';
 import SortListScreen from '../screens/items/SortListScreen';
 
+const tabNavConfig = {
+  tabBarComponent: TabBarBottom,
+  tabBarOptions: {
+    showLabel: false
+  }
+};
+
 const ListModeNavigator = TabNavigator(
   {
     EditLists: {
@@ -23,7 +30,7 @@ const ListModeNavigator = TabNavigator(
     SortLists: {
       screen: SortAllListsScreen
     },
-  }
+  }, tabNavConfig
 );
 
 const ItemModeNavigator = TabNavigator(
@@ -40,6 +47,7 @@ const ItemModeNavigator = TabNavigator(
   },
   {
     backBehavior: 'none',
+    ...tabNavConfig,
   }
 );
 
