@@ -87,6 +87,7 @@ class EditListScreen extends Component {
               this.itemFields[index] = input._root;
             }
           }}
+          style={styles.text}
           autoCorrect={false}
           defaultValue={name}
           onChangeText={currentItemName =>
@@ -130,6 +131,7 @@ class EditListScreen extends Component {
                   this.newItemField = input._root;
                 }
               }}
+              style={styles.text}
               autoCorrect={false}
               value={this.state.newItemName}
               onChangeText={newItemName => this.setState({ newItemName })}

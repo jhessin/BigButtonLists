@@ -43,6 +43,8 @@ class EditAllListsScreen extends Component {
 
   listFields = [];
 
+  autoFocus = this.props.dataArray.length === 0;
+
   submit = (list) => () => {
     if (this.state.currentListName.length > 0) {
       db.setList({
@@ -88,6 +90,7 @@ class EditAllListsScreen extends Component {
     return (
       <ListItem>
         <Input
+          style={styles.text}
           ref={input => {
             if (input) {
               this.listFields[index] = input._root;
@@ -107,9 +110,7 @@ class EditAllListsScreen extends Component {
         >
           <Icon
             active
-            name="trash"
-            ios="ios-trash"
-            android="delete-forever"
+            name="ios-trash"
             style={{ color: 'maroon' }}
           />
         </Button>
@@ -131,6 +132,8 @@ class EditAllListsScreen extends Component {
               New List
             </Label>
             <Input
+              autoFocus={this.autoFocus}
+              style={styles.text}
               getRef={input => {
                 if (input) {
                   this.newListField = input._root;
@@ -138,7 +141,10 @@ class EditAllListsScreen extends Component {
               }}
               autoCorrect={false}
               value={this.state.newListName}
-              onChangeText={newListName => this.setState({ newListName })}
+              onChangeText={newListName => {
+                this.setState({ newListName });
+                this.autoFocus = true;
+              }}
               onSubmitEditing={this.refocus}
             />
           </Item>

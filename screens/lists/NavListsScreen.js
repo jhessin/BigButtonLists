@@ -38,7 +38,7 @@ class NavListsScreen extends Component {
         onPress={this.onPress(index)}
       >
         <Grid>
-          <Text>{item && item.name}</Text>
+          <Text style={styles.text}>{item && item.name}</Text>
           <Col size={3} />
           <Col size={1} />
           <Icon

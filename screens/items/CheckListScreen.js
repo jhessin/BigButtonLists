@@ -49,7 +49,7 @@ class CheckListScreen extends Component {
             name={checked ? 'md-checkbox-outline' : 'md-square-outline'}
           />
         </Button>
-        <Text>{name}</Text>
+        <Text style={styles.text}>{name}</Text>
       </ListItem>
     );
   }

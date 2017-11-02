@@ -56,7 +56,7 @@ class SortListScreen extends Component {
     return (
       <ListItem>
         <Grid>
-          <Text>{name}</Text>
+          <Text style={styles.text}>{name}</Text>
           <Col size={3} />
           <Col size={1} />
           {upButton}

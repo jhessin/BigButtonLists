@@ -63,7 +63,7 @@ class SortAllListsScreen extends Component {
     return (
       <ListItem>
         <Grid>
-          <Text>
+          <Text style={styles.text}>
             {item ? item.name : index}
           </Text>
           <Col size={3} />
